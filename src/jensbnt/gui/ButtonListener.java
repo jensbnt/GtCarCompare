@@ -15,12 +15,12 @@ import jensbnt.util.CarSort;
 
 public class ButtonListener implements ActionListener {
 
-	private DefaultListModel<String> listModel;
+	private DefaultListModel<Car> listModel;
 	private ButtonGroup group;
 	private JCheckBox checkOwned;
 	private List<JCheckBox> checkGroup;
 	
-	public ButtonListener(DefaultListModel<String> listModel, ButtonGroup group, JCheckBox checkOwned, List<JCheckBox> checkGroup) {
+	public ButtonListener(DefaultListModel<Car> listModel, ButtonGroup group, JCheckBox checkOwned, List<JCheckBox> checkGroup) {
 		this.listModel = listModel;
 		this.group = group;
 		this.checkOwned = checkOwned;
@@ -50,7 +50,7 @@ public class ButtonListener implements ActionListener {
 		Car[] list = CarSort.getSortedCars(CarComparator.getComparatorByName(selectedSort), checkOwned.isSelected(), selectedGroups);
 		
 		for (Car car : list) {
-			listModel.addElement(car.toString());
+			listModel.addElement(car);
 		}
 	}
 }

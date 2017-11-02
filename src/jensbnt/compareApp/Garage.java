@@ -36,12 +36,12 @@ public class Garage {
 		}
 	}
 	
-	public static void addOwned(String idString) {
+	public static void addOwned(Car car) {
 		FileWriter fw = null;
 		try {
 		    String filename = "owned_cars.txt";
 		    fw = new FileWriter(filename,true);
-		    fw.write(idString + "\n");
+		    fw.write(car.getId() + "\n");
 		} catch(IOException ioe) {
 		    System.err.println("IOException: " + ioe.getMessage());
 		} finally {

@@ -78,6 +78,14 @@ public class Car {
 		return owned;
 	}
 	
+	public void toggleOwned() {
+		if (owned) {
+			owned = false;
+		} else {
+			owned = true;
+		}
+	}
+	
 	public String getAttributeByName(String n) {
 		switch (n) {
 		case "MaxSpeed":

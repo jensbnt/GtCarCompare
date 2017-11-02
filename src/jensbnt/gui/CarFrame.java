@@ -19,7 +19,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+
+import jensbnt.compareApp.Car;
 
 @SuppressWarnings("serial")
 public class CarFrame extends JFrame {
@@ -54,10 +55,10 @@ public class CarFrame extends JFrame {
 	
 	private JButton buttonSort;
 	private JCheckBox checkOwned;
-	private JTextField addOwned;
+	private JButton addOwned;
 	
-	private JList<String> listArea;
-	private DefaultListModel<String> listModel;
+	private JList<Car> listArea;
+	private DefaultListModel<Car> listModel;
 	
 	public CarFrame() {
 		super("GT Sport");
@@ -134,10 +135,10 @@ public class CarFrame extends JFrame {
 		/* other */
 		buttonSort = new JButton("Sort");
 		checkOwned = new JCheckBox("Show only owned cars");
-		addOwned = new JTextField("");
+		addOwned = new JButton("Toggle car own");
 		
 		/* List area */
-		listModel = new DefaultListModel<String>();
+		listModel = new DefaultListModel<>();
 		listArea = new JList<>(listModel);
 		
 		/* Init window */
@@ -196,6 +197,6 @@ public class CarFrame extends JFrame {
 	
 	private void initListeners() {
 		buttonSort.addActionListener(new ButtonListener(listModel, radioGroup, checkOwned, checkGroup));
-		addOwned.addActionListener(new CarOwnedListener());
+		addOwned.addActionListener(new CarOwnedListener(listArea));
 	}
 }
