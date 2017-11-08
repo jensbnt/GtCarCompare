@@ -86,7 +86,7 @@ public class Car {
 		}
 	}
 	
-	public String getAttributeByName(String n) {
+	/*public String getAttributeByName(String n) {
 		switch (n) {
 		case "MaxSpeed":
 			return maxSpeed + "";
@@ -111,7 +111,7 @@ public class Car {
 		default:
 			return "";
 		}
-	}
+	}*/
 	
 	@Override
 	public String toString() {

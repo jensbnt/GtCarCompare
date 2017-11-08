@@ -158,7 +158,6 @@ public class CarFrame extends JFrame {
 	
 	private void layoutComponents() {
 		JPanel bottomPanel = new JPanel();
-		JScrollPane listPane = new JScrollPane();
 		JPanel topPanel = new JPanel();
 		add(bottomPanel, BorderLayout.SOUTH);
 		add(topPanel, BorderLayout.NORTH);
