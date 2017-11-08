@@ -43,7 +43,7 @@ public class CarPanel extends JPanel{
 		this.price.setText("Price: " + car.getPrice());
 		this.owned.setText("Owned: " + car.getOwned());
 		
-		this.setMaximumSize(new Dimension(8000,50));
+		this.setMaximumSize(new Dimension(8000,30));
 	}
 	
 	private void initLabels() {
@@ -61,7 +61,7 @@ public class CarPanel extends JPanel{
 	}
 	
 	private void initLayout() {
-		setLayout(new GridLayout(2,6));
+		setLayout(new GridLayout(1,11));
 		add(make);
 		add(name);
 		add(maxSpeed);
