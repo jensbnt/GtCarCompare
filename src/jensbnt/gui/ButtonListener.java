@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
+import javax.swing.JPanel;
 
 import jensbnt.compareApp.Car;
 import jensbnt.util.CarComparator;
@@ -15,20 +15,20 @@ import jensbnt.util.CarSort;
 
 public class ButtonListener implements ActionListener {
 
-	private DefaultListModel<Car> listModel;
+	private JPanel carPanel;
 	private ButtonGroup group;
 	private JCheckBox checkOwned;
 	private List<JCheckBox> checkGroup;
 	
-	public ButtonListener(DefaultListModel<Car> listModel, ButtonGroup group, JCheckBox checkOwned, List<JCheckBox> checkGroup) {
-		this.listModel = listModel;
+	public ButtonListener(JPanel carPanel, ButtonGroup group, JCheckBox checkOwned, List<JCheckBox> checkGroup) {
+		this.carPanel = carPanel;
 		this.group = group;
 		this.checkOwned = checkOwned;
 		this.checkGroup = checkGroup;
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
-		listModel.clear();
+		carPanel.removeAll();
 		
 		/* Get sort method */
 		String selectedSort;
@@ -50,7 +50,9 @@ public class ButtonListener implements ActionListener {
 		Car[] list = CarSort.getSortedCars(CarComparator.getComparatorByName(selectedSort), checkOwned.isSelected(), selectedGroups);
 		
 		for (Car car : list) {
-			listModel.addElement(car);
+			carPanel.add(new CarPanel(car));
 		}
+		
+		carPanel.revalidate();
 	}
 }

@@ -6,21 +6,18 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-
-import jensbnt.compareApp.Car;
 
 @SuppressWarnings("serial")
 public class CarFrame extends JFrame {
@@ -57,8 +54,8 @@ public class CarFrame extends JFrame {
 	private JCheckBox checkOwned;
 	private JButton addOwned;
 	
-	private JList<Car> listArea;
-	private DefaultListModel<Car> listModel;
+	private JPanel carPanel;
+	private JScrollPane scrollPane;
 	
 	public CarFrame() {
 		super("GT Sport");
@@ -137,9 +134,9 @@ public class CarFrame extends JFrame {
 		checkOwned = new JCheckBox("Show only owned cars");
 		addOwned = new JButton("Toggle car own");
 		
-		/* List area */
-		listModel = new DefaultListModel<>();
-		listArea = new JList<>(listModel);
+		/* Car Panel */
+		carPanel = new JPanel();
+		scrollPane = new JScrollPane(carPanel);
 		
 		/* Init window */
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -165,7 +162,9 @@ public class CarFrame extends JFrame {
 		JPanel topPanel = new JPanel();
 		add(bottomPanel, BorderLayout.SOUTH);
 		add(topPanel, BorderLayout.NORTH);
-		add(listPane, BorderLayout.CENTER);
+		add(scrollPane, BorderLayout.CENTER);
+		
+		carPanel.setLayout(new BoxLayout(carPanel, BoxLayout.Y_AXIS));
 		
 		JPanel groupPanel = new JPanel();
 		add(groupPanel, BorderLayout.WEST);
@@ -187,8 +186,6 @@ public class CarFrame extends JFrame {
 		topPanel.add(radioWeight);
 		topPanel.add(radioPrice);
 		
-		listPane.setViewportView(listArea);
-		
 		bottomPanel.setLayout(new FlowLayout());
 		bottomPanel.add(buttonSort);
 		bottomPanel.add(checkOwned);
@@ -196,7 +193,7 @@ public class CarFrame extends JFrame {
 	}
 	
 	private void initListeners() {
-		buttonSort.addActionListener(new ButtonListener(listModel, radioGroup, checkOwned, checkGroup));
-		addOwned.addActionListener(new CarOwnedListener(listArea));
+		buttonSort.addActionListener(new ButtonListener(carPanel, radioGroup, checkOwned, checkGroup));
+		//addOwned.addActionListener(new CarOwnedListener(listArea));
 	}
 }
