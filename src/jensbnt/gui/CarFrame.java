@@ -61,6 +61,7 @@ public class CarFrame extends JFrame {
 		layoutComponents();
 		initListeners();
 		
+		setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		setVisible(true);
 	}
 	

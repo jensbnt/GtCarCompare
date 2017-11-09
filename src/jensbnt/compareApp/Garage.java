@@ -12,7 +12,7 @@ public class Garage {
 	public static List<Integer> owned_cars;
 	public static List<CarClass> classes;
 	
-	public static String[] classNames = { "Group4", "Group3", "GroupB" };
+	public static String[] classNames = { "N100", "N200", "N400", "N500", "N600", "N700", "N800", "N1000", "Group4", "Group3", "Group1", "GroupB", "GroupX" };
 
 	Garage() throws Exception {
 		classes = new ArrayList<>();
@@ -20,7 +20,7 @@ public class Garage {
 		
 		for(int index = 0; index < classNames.length; index++) {
 			classes.add(new CarClass());
-			parseGroup(classes.get(index).getCars(), classNames[index] + ".txt", index);
+			parseGroup(classes.get(index).getCars(), "car_database/" + classNames[index] + ".txt", index);
 		}
 	}
 	
@@ -55,7 +55,7 @@ public class Garage {
 	
 	private static void parseOwned() throws Exception {
 		try {
-			BufferedReader in = new BufferedReader(new FileReader("owned_cars.txt"));
+			BufferedReader in = new BufferedReader(new FileReader("car_database/owned_cars.txt"));
 			
 			owned_cars = new ArrayList<>();
 			
