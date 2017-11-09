@@ -15,7 +15,7 @@ public class CarSort {
 		
 		/* Add groups */
 		for (Integer index : selectedGroup) {
-			master = appendGroup(master, Garage.getGroup(index));
+			master = appendGroup(master, Garage.getClass(index));
 		}
 		
 		/* return master group */

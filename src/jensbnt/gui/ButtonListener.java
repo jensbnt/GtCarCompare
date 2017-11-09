@@ -43,14 +43,14 @@ public class ButtonListener implements ActionListener {
 		
 		for(JCheckBox check : checkGroup) {
 			if (check.isSelected())
-				selectedGroups.add(Integer.parseInt(check.getActionCommand()));
+				selectedGroups.add(checkGroup.indexOf(check));
 		}
 		
 		/* Get car list */
 		Car[] list = CarSort.getSortedCars(CarComparator.getComparatorByName(selectedSort), checkOwned.isSelected(), selectedGroups);
 		
 		for (Car car : list) {
-			carPanel.add(new CarPanel(car, 2, 3, 4, 5, 6));
+			carPanel.add(new CarPanel(car, 10));
 		}
 		
 		carPanel.revalidate();

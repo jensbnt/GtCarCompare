@@ -12,11 +12,7 @@ public class Garage {
 	public static List<Integer> owned_cars;
 	public static List<CarClass> classes;
 	
-	public static String[] classNames = { "Group3", "Group4", "GroupB" };
-	
-	public static List<Car> group3;
-	public static List<Car> group4;
-	public static List<Car> groupB;
+	public static String[] classNames = { "Group4", "Group3", "GroupB" };
 
 	Garage() throws Exception {
 		classes = new ArrayList<>();
@@ -28,12 +24,16 @@ public class Garage {
 		}
 	}
 	
-	public static List<Car> getGroup(int index) {
+	public static List<Car> getClass(int index) {
 		try {
 			return classes.get(index).getCars();
 		} catch (IndexOutOfBoundsException e) {
 			return new ArrayList<Car>();
 		}
+	}
+	
+	public static String[] getClassNames() {
+		return classNames;
 	}
 	
 	public static void addOwned(Car car) {
