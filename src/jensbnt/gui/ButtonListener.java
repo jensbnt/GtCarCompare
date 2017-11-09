@@ -54,5 +54,6 @@ public class ButtonListener implements ActionListener {
 		}
 		
 		carPanel.revalidate();
+		carPanel.repaint();
 	}
 }

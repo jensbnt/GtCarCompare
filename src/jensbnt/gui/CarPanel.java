@@ -57,8 +57,11 @@ public class CarPanel extends JPanel{
 	
 	private void fade(int[] fadeColumns) {
 		for(int fadeColumn : fadeColumns) { // EXCEPTION HANDLING PLS :(
-			labels.get(fadeColumn).setVisible(false);
-			System.out.println(fadeColumn);
+			try {
+				labels.get(fadeColumn).setVisible(false);
+			} catch (IndexOutOfBoundsException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

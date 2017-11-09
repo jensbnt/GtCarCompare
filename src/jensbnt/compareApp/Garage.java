@@ -10,29 +10,29 @@ import java.util.List;
 public class Garage {
 
 	public static List<Integer> owned_cars;
+	public static List<CarClass> classes;
+	
+	public static String[] classNames = { "Group3", "Group4", "GroupB" };
+	
 	public static List<Car> group3;
 	public static List<Car> group4;
 	public static List<Car> groupB;
 
 	Garage() throws Exception {
+		classes = new ArrayList<>();
 		parseOwned();
-		parseGroup(group3 = new ArrayList<>(), "Group3.txt");
-		parseGroup(group4 = new ArrayList<>(), "Group4.txt");
-		parseGroup(groupB = new ArrayList<>(), "GroupB.txt");
+		
+		for(int index = 0; index < classNames.length; index++) {
+			classes.add(new CarClass());
+			parseGroup(classes.get(index).getCars(), classNames[index] + ".txt");
+		}
 	}
 	
 	public static List<Car> getGroup(int index) {
-		switch(index) {
-		case 0:
+		try {
+			return classes.get(index).getCars();
+		} catch (IndexOutOfBoundsException e) {
 			return new ArrayList<Car>();
-		case 1:
-			return group4;
-		case 2:
-			return group3;
-		case 3:
-			return groupB;
-		default:
-			return null;
 		}
 	}
 	

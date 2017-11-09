@@ -17,7 +17,7 @@ public class CompareApp {
 		try {
 			Garage garage = new Garage();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 			return false;
 		}
 		
