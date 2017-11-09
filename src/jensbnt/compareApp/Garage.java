@@ -20,7 +20,7 @@ public class Garage {
 		
 		for(int index = 0; index < classNames.length; index++) {
 			classes.add(new CarClass());
-			parseGroup(classes.get(index).getCars(), classNames[index] + ".txt");
+			parseGroup(classes.get(index).getCars(), classNames[index] + ".txt", index);
 		}
 	}
 	
@@ -70,13 +70,13 @@ public class Garage {
 		}
 	}
 	
-	private static void parseGroup(List<Car> group, String filename) throws Exception {
+	private static void parseGroup(List<Car> group, String filename, int groupIndex) throws Exception {
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(filename));
 			
 			String line;
 			while((line = in.readLine()) != null) {
-				parseCar(group, line);
+				parseCar(group, line, groupIndex);
 			}
 			
 			in.close();
@@ -85,7 +85,7 @@ public class Garage {
 		}
 	}
 	
-	private static void parseCar(List<Car> group, String rawLine) throws Exception {
+	private static void parseCar(List<Car> group, String rawLine, int groupIndex) throws Exception {
 		String[] splittedLine = rawLine.split(",");
 		
 		if (splittedLine.length != 11)
@@ -105,6 +105,6 @@ public class Garage {
 		
 		Boolean owned = owned_cars.contains(id);
 		
-		group.add(new Car(id, make, name, maxSpeed, acceleration, braking, cornering, stability, bhp, weight, price, owned));
+		group.add(new Car((1+groupIndex)*1000 + id, make, name, maxSpeed, acceleration, braking, cornering, stability, bhp, weight, price, owned));
 	}
 }
