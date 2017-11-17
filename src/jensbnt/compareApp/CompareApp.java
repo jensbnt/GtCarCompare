@@ -6,13 +6,20 @@ public class CompareApp {
 	
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
+		Garage garage = null;
 		try {
-			Garage garage = new Garage();
+			garage = new Garage();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
 		}
 		
 		new CarFrame();
+		
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+	        public void run() {
+	            System.out.println("-- SAVE OWNED CARS --");
+	        }
+	    }, "Shutdown-thread"));
 	}
 }

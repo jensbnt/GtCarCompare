@@ -1,9 +1,12 @@
 package jensbnt.compareApp;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,16 +14,17 @@ public class Garage {
 
 	public static List<Integer> owned_cars;
 	public static List<CarClass> classes;
+	public static Path cardb = Paths.get("car_database");
 	
 	public static String[] classNames = { "N100", "N200", "N400", "N500", "N600", "N700", "N800", "N1000", "Group4", "Group3", "Group1", "GroupB", "GroupX" };
 
 	Garage() throws Exception {
 		classes = new ArrayList<>();
-		parseOwned();
+		loadOwnedCars();
 		
 		for(int index = 0; index < classNames.length; index++) {
 			classes.add(new CarClass());
-			parseGroup(classes.get(index).getCars(), "car_database/" + classNames[index] + ".txt", index);
+			parseGroup(classes.get(index).getCars(), classNames[index], index);
 		}
 	}
 	
@@ -36,52 +40,34 @@ public class Garage {
 		return classNames;
 	}
 	
-	public static void addOwned(Car car) {
-		FileWriter fw = null;
-		try {
-		    String filename = "owned_cars.txt";
-		    fw = new FileWriter(filename,true);
-		    fw.write(car.getId() + "\n");
-		} catch(IOException ioe) {
-		    System.err.println("IOException: " + ioe.getMessage());
-		} finally {
-		    try {
-				fw.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	private static void parseOwned() throws Exception {
-		try {
-			BufferedReader in = new BufferedReader(new FileReader("car_database/owned_cars.txt"));
-			
+	private static void loadOwnedCars() throws Exception {
+		try(BufferedReader reader = Files.newBufferedReader(cardb.resolve("owned_cars.txt"))) {
 			owned_cars = new ArrayList<>();
 			
-			String line;
-			while((line = in.readLine()) != null) {
+			String line = null;
+			while((line = reader.readLine()) != null) {
 				owned_cars.add(Integer.parseInt(line));
 			}
-			
-			in.close();
-		} catch (Exception e) {
+		} catch (FileNotFoundException e) {
+			throw new Exception("'owned_cars.txt' not found!");
+		} catch (IOException e) {
 			throw new Exception("Error loading files from owned_cars.txt");
 		}
 	}
 	
-	private static void parseGroup(List<Car> group, String filename, int groupIndex) throws Exception {
-		try {
-			BufferedReader in = new BufferedReader(new FileReader(filename));
-			
-			String line;
-			while((line = in.readLine()) != null) {
+	public static void saveOwnedCars() {
+		
+	}
+	
+	private static void parseGroup(List<Car> group, String classname, int groupIndex) throws Exception {
+		try(BufferedReader reader = Files.newBufferedReader(cardb.resolve(classname + ".txt"), StandardCharsets.ISO_8859_1)) {	
+			String line = null;
+			while((line = reader.readLine()) != null) {
 				parseCar(group, line, groupIndex);
 			}
-			
-			in.close();
-		} catch (Exception e) {
-			throw new Exception("Error loading files from " + filename);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new Exception("Error loading class: " + classname);
 		}
 	}
 	
