@@ -1,6 +1,7 @@
 package jensbnt.compareApp;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -56,7 +57,17 @@ public class Garage {
 	}
 	
 	public static void saveOwnedCars() {
-		
+		try(BufferedWriter writer = Files.newBufferedWriter(cardb.resolve("owned_cars.txt"))) {
+			for(CarClass carClass : classes) {
+				for (Car car : carClass.getCars()) {
+					if (car.getOwned()) {
+						writer.write(car.getId() + "\n");
+					}
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("Something went wrong writing the contacts!");
+		}
 	}
 	
 	private static void parseGroup(List<Car> group, String classname, int groupIndex) throws Exception {
@@ -65,8 +76,9 @@ public class Garage {
 			while((line = reader.readLine()) != null) {
 				parseCar(group, line, groupIndex);
 			}
+		} catch (FileNotFoundException e) {
+			throw new Exception("'" + classname + "' not found!");
 		} catch (IOException e) {
-			e.printStackTrace();
 			throw new Exception("Error loading class: " + classname);
 		}
 	}
@@ -77,7 +89,7 @@ public class Garage {
 		if (splittedLine.length != 11)
 			throw new Exception("Parsing error");
 		
-		int id = Integer.parseInt(splittedLine[0]);
+		int id = (1+groupIndex)*1000 + Integer.parseInt(splittedLine[0]);
 		String make = splittedLine[1];
 		String name = splittedLine[2];
 		double maxSpeed = Double.parseDouble(splittedLine[3]);
@@ -91,6 +103,6 @@ public class Garage {
 		
 		Boolean owned = owned_cars.contains(id);
 		
-		group.add(new Car((1+groupIndex)*1000 + id, make, name, maxSpeed, acceleration, braking, cornering, stability, bhp, weight, price, owned));
+		group.add(new Car(id, make, name, maxSpeed, acceleration, braking, cornering, stability, bhp, weight, price, owned));
 	}
 }

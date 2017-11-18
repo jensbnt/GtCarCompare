@@ -50,7 +50,7 @@ public class ButtonListener implements ActionListener {
 		Car[] list = CarSort.getSortedCars(CarComparator.getComparatorByName(selectedSort), checkOwned.isSelected(), selectedGroups);
 		
 		for (Car car : list) {
-			carPanel.add(new CarPanel(car, 10));
+			carPanel.add(new CarPanel(car)); // CAR FILTER
 		}
 		
 		carPanel.revalidate();

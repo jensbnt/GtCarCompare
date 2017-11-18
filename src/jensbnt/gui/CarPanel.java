@@ -3,10 +3,13 @@ package jensbnt.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -16,6 +19,7 @@ import jensbnt.compareApp.Car;
 public class CarPanel extends JPanel{
 
 	private List<JLabel> labels;
+	private JButton owned;
 	private Car car;
 	
 	CarPanel(Car car, int... fadeColumns) {
@@ -36,7 +40,7 @@ public class CarPanel extends JPanel{
 		
 		labels.add(new JLabel(car.getMake()));
 		labels.add(new JLabel(car.getName()));
-		labels.add(new JLabel("Max Speed: " + car.getMaxSpeed()));
+		labels.add(new JLabel("Max Speed: " + car.getId()));
 		labels.add(new JLabel("Acceleration: " + car.getAcceleration()));
 		labels.add(new JLabel("Braking: " + car.getBraking()));
 		labels.add(new JLabel("Cornering: " + car.getCornering()));
@@ -44,7 +48,10 @@ public class CarPanel extends JPanel{
 		labels.add(new JLabel("BHP: " + car.getBhp()));
 		labels.add(new JLabel("Weight: " + car.getWeight()));
 		labels.add(new JLabel("Price: " + car.getPrice()));
-		labels.add(new JLabel("Owned: " + car.getOwned()));
+		
+		owned = new JButton();
+		updateOwnedButton();
+		initListener();
 	}
 	
 	private void initLayout() {
@@ -52,6 +59,30 @@ public class CarPanel extends JPanel{
 		
 		for(JLabel label : labels) {
 			add(label);
+		}
+		
+		add(owned);
+	}
+	
+	private void initListener() {
+		owned.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				car.toggleOwned();
+				updateOwnedButton();
+			}
+			
+		});
+	}
+	
+	private void updateOwnedButton() {
+		if (car.getOwned()) {
+			owned.setText("Owned");
+			owned.setBackground(Color.GREEN);
+		} else {
+			owned.setText("Not Owned");
+			owned.setBackground(Color.RED);
 		}
 	}
 	

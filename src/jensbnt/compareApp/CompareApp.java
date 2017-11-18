@@ -18,7 +18,7 @@ public class CompareApp {
 		
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 	        public void run() {
-	            System.out.println("-- SAVE OWNED CARS --");
+	            Garage.saveOwnedCars();
 	        }
 	    }, "Shutdown-thread"));
 	}
