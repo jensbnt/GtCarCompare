@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import jensbnt.compareApp.Car;
+import jensbnt.util.CarStats;
 
 @SuppressWarnings("serial")
 public class CarPanel extends JPanel{
@@ -22,13 +23,17 @@ public class CarPanel extends JPanel{
 	private JButton owned;
 	private Car car;
 	
-	CarPanel(Car car, int... fadeColumns) {
+	CarPanel(Car car) {
+		this(car, 0);
+	}
+	
+	CarPanel(Car car, int focus) {
 		this.car = car;
 		
 		initLabels();
 		initLayout();
 		
-		fade(fadeColumns);
+		focus(focus);
 		
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
 		
@@ -37,17 +42,13 @@ public class CarPanel extends JPanel{
 	
 	private void initLabels() {
 		labels = new ArrayList<>();
-		
-		labels.add(new JLabel(car.getMake()));
-		labels.add(new JLabel(car.getName()));
-		labels.add(new JLabel("Max Speed: " + car.getId()));
-		labels.add(new JLabel("Acceleration: " + car.getAcceleration()));
-		labels.add(new JLabel("Braking: " + car.getBraking()));
-		labels.add(new JLabel("Cornering: " + car.getCornering()));
-		labels.add(new JLabel("Stability: " + car.getStability()));
-		labels.add(new JLabel("BHP: " + car.getBhp()));
-		labels.add(new JLabel("Weight: " + car.getWeight()));
-		labels.add(new JLabel("Price: " + car.getPrice()));
+		for (CarStats stat : CarStats.values()) {
+			if (stat == CarStats.NAME || stat == CarStats.MAKE) {
+				labels.add(new JLabel(car.getStringByStat(stat)));
+			} else if (stat != CarStats.ID) {
+				labels.add(new JLabel(stat.toString() + ": " + car.getStringByStat(stat)));
+			}
+		}
 		
 		owned = new JButton();
 		updateOwnedButton();
@@ -80,19 +81,23 @@ public class CarPanel extends JPanel{
 		if (car.getOwned()) {
 			owned.setText("Owned");
 			owned.setBackground(Color.GREEN);
+			this.setBackground(Color.LIGHT_GRAY);
 		} else {
 			owned.setText("Not Owned");
 			owned.setBackground(Color.RED);
+			this.setBackground(Color.WHITE);
 		}
 	}
 	
-	private void fade(int[] fadeColumns) {
-		for(int fadeColumn : fadeColumns) { // EXCEPTION HANDLING PLS :(
-			try {
-				labels.get(fadeColumn).setVisible(false);
-			} catch (IndexOutOfBoundsException e) {
-				e.printStackTrace();
+	private void focus(int focus) { // TEMP. DISABLED
+		/*if (focus != 0) {
+			for(int i = 2; i < labels.size(); i++) {
+				if(i == focus) {
+					labels.get(i).setVisible(true);
+				} else {
+					labels.get(i).setVisible(false);
+				}
 			}
-		}
+		}*/
 	}
 }

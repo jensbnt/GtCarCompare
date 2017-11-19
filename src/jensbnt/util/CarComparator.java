@@ -19,28 +19,30 @@ public class CarComparator {
 	public static final Comparator<Car> byPrice = (c1, c2) -> Integer.compare(c2.getPrice(), c1.getPrice());
 	public static final Comparator<Car> byOwned = (c1, c2) -> Boolean.compare(c2.getOwned(), c1.getOwned());
 
-	public static Comparator<Car> getComparatorByName(String name) {
-		switch (name) {
-		case "MaxSpeed":
+	public static Comparator<Car> getComparatorByStat(CarStats stat) {
+		switch (stat) {
+		case MAXSPEED:
 			return byMaxSpeed;
-		case "Acceleration":
+		case ACCELERATION:
 			return byAcceleration;
-		case "Braking":
+		case BRAKING:
 			return byBraking;
-		case "Cornering":
+		case CORNERING:
 			return byCornering;
-		case "Stability":
+		case STABILITY:
 			return byStability;
-		case "Make":
+		case MAKE:
 			return byMake;
-		case "Name":
+		case NAME:
 			return byName;
-		case "BHP":
+		case BHP:
 			return byBhp;
-		case "Weight":
+		case WEIGHT:
 			return byWeight;
-		case "Price":
+		case PRICE:
 			return byPrice;
+		case ID:
+			return byId;
 		default:
 			return byId;
 		}

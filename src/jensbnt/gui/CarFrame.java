@@ -20,10 +20,12 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
 import jensbnt.compareApp.Garage;
+import jensbnt.util.CarStats;
 
 @SuppressWarnings("serial")
 public class CarFrame extends JFrame {
 	
+	/* Menu Items */
 	private JMenuBar menuBar;
 	private JMenu menu1;
 	private JMenuItem item1_1;
@@ -34,23 +36,18 @@ public class CarFrame extends JFrame {
 	private JMenuItem item2_2_1;
 	private JMenuItem item2_2_2;
 	
-	private ButtonGroup radioGroup;
-	private JRadioButton radioMaxSpeed;
-	private JRadioButton radioAcceleration;
-	private JRadioButton radioBraking;
-	private JRadioButton radioCornering;
-	private JRadioButton radioStability;
-	private JRadioButton radioMake;
-	private JRadioButton radioName;
-	private JRadioButton radioBhp;
-	private JRadioButton radioWeight;
-	private JRadioButton radioPrice;
+	/* Sorting Items */
+	private ButtonGroup sortingGroup;
+	private List<JRadioButton> sortingRadioButtons;
 
-	private List<JCheckBox> checkGroup;
+	/* Class Items */
+	private List<JCheckBox> classCheckBoxes;
 	
+	/* Action Items */
 	private JButton buttonSort;
 	private JCheckBox checkOwned;
 	
+	/* Car Panel Items */
 	private JPanel carPanel;
 	private JScrollPane scrollPane;
 	
@@ -66,7 +63,7 @@ public class CarFrame extends JFrame {
 	}
 	
 	private void initComponents() {
-		/* Init menubar */
+		/* Init Menu Items */
 		menuBar = new JMenuBar();
 		menu1 = new JMenu("Menu 1");
 		item1_1 = new JMenuItem("Item 1_1");
@@ -77,54 +74,33 @@ public class CarFrame extends JFrame {
 		item2_2_1 = new JMenuItem("Item 2_2_1");
 		item2_2_2 = new JMenuItem("Item 2_2_2");
 		
-		/* Init radio sort buttons */
-		radioGroup = new ButtonGroup();
-		radioMaxSpeed = new JRadioButton("Max Speed");
-		radioMaxSpeed.setActionCommand("MaxSpeed");
-		radioAcceleration = new JRadioButton("Acceleration");
-		radioAcceleration.setActionCommand("Acceleration");
-		radioBraking = new JRadioButton("Braking");
-		radioBraking.setActionCommand("Braking");
-		radioCornering = new JRadioButton("Cornering");
-		radioCornering.setActionCommand("Cornering");
-		radioStability = new JRadioButton("Stability");
-		radioStability.setActionCommand("Stability");
-		radioMake = new JRadioButton("Make");
-		radioMake.setActionCommand("Make");
-		radioName = new JRadioButton("Name");
-		radioName.setActionCommand("Name");
-		radioBhp = new JRadioButton("BHP");
-		radioBhp.setActionCommand("BHP");
-		radioWeight = new JRadioButton("Weight");
-		radioWeight.setActionCommand("Weight");
-		radioPrice = new JRadioButton("Price");
-		radioPrice.setActionCommand("Price");
-
-		radioGroup.add(radioMaxSpeed);
-		radioGroup.add(radioAcceleration);
-		radioGroup.add(radioBraking);
-		radioGroup.add(radioCornering);
-		radioGroup.add(radioStability);
-		radioGroup.add(radioMake);
-		radioGroup.add(radioName);
-		radioGroup.add(radioBhp);
-		radioGroup.add(radioWeight);
-		radioGroup.add(radioPrice);
+		/* Init Sorting Items */
+		sortingRadioButtons = new ArrayList<>();
+		for(CarStats carStat : CarStats.values()) {
+			sortingRadioButtons.add(new JRadioButton(carStat.toString()));
+		}
 		
-		/* init group buttons */
-		checkGroup = new ArrayList<JCheckBox>();
+		sortingGroup = new ButtonGroup();
+		for (JRadioButton button : sortingRadioButtons) {
+			sortingGroup.add(button);
+		}
+		
+		sortingRadioButtons.get(0).setSelected(true);
+		
+		/* Init Class Items */
+		classCheckBoxes = new ArrayList<JCheckBox>();
 		
 		String[] classNames = Garage.getClassNames();
 		
 		for (int index = 0; index < classNames.length; index++) {
-			checkGroup.add(new JCheckBox(classNames[index]));
+			classCheckBoxes.add(new JCheckBox(classNames[index]));
 		}
 		
-		/* other */
+		/* Init Action Items */
 		buttonSort = new JButton("Sort");
 		checkOwned = new JCheckBox("Show only owned cars");
 		
-		/* Car Panel */
+		/* Init Car Panel Items */
 		carPanel = new JPanel();
 		scrollPane = new JScrollPane(carPanel);
 		
@@ -147,40 +123,36 @@ public class CarFrame extends JFrame {
 	}
 	
 	private void layoutComponents() {
-		JPanel bottomPanel = new JPanel();
+		/* Layout Sorting Items */
 		JPanel topPanel = new JPanel();
-		add(bottomPanel, BorderLayout.SOUTH);
 		add(topPanel, BorderLayout.NORTH);
-		add(scrollPane, BorderLayout.CENTER);
+		topPanel.setLayout(new GridLayout(1,5));
+		for (JRadioButton button : sortingRadioButtons) {
+			topPanel.add(button);
+		}
 		
-		carPanel.setLayout(new BoxLayout(carPanel, BoxLayout.Y_AXIS));
-		
+		/* Layout Class Items */
 		JPanel groupPanel = new JPanel();
 		add(groupPanel, BorderLayout.WEST);
-		groupPanel.setLayout(new GridLayout(checkGroup.size(),1));
+		groupPanel.setLayout(new GridLayout(classCheckBoxes.size(),1));
 		
-		for(JCheckBox checkBox : checkGroup) {
+		for(JCheckBox checkBox : classCheckBoxes) {
 			groupPanel.add(checkBox);
 		}
 		
-		topPanel.setLayout(new GridLayout(2,5));
-		topPanel.add(radioMaxSpeed);
-		topPanel.add(radioAcceleration);
-		topPanel.add(radioBraking);
-		topPanel.add(radioCornering);
-		topPanel.add(radioStability);
-		topPanel.add(radioMake);
-		topPanel.add(radioName);
-		topPanel.add(radioBhp);
-		topPanel.add(radioWeight);
-		topPanel.add(radioPrice);
+		/* Layout Car Panel */
+		add(scrollPane, BorderLayout.CENTER);
+		carPanel.setLayout(new BoxLayout(carPanel, BoxLayout.Y_AXIS));
 		
+		/* Layout Action Items */
+		JPanel bottomPanel = new JPanel();
+		add(bottomPanel, BorderLayout.SOUTH);
 		bottomPanel.setLayout(new FlowLayout());
 		bottomPanel.add(buttonSort);
 		bottomPanel.add(checkOwned);
 	}
 	
 	private void initListeners() {
-		buttonSort.addActionListener(new ButtonListener(carPanel, radioGroup, checkOwned, checkGroup));
+		buttonSort.addActionListener(new ButtonListener(carPanel, sortingRadioButtons, classCheckBoxes, checkOwned));
 	}
 }

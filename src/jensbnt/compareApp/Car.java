@@ -1,5 +1,7 @@
 package jensbnt.compareApp;
 
+import jensbnt.util.CarStats;
+
 public class Car {
 	
 	private int id;
@@ -86,32 +88,34 @@ public class Car {
 		}
 	}
 	
-	/*public String getAttributeByName(String n) {
-		switch (n) {
-		case "MaxSpeed":
+	public String getStringByStat(CarStats stat) {
+		switch (stat) {
+		case MAXSPEED:
 			return maxSpeed + "";
-		case "Acceleration":
+		case ACCELERATION:
 			return acceleration + "";
-		case "Braking":
+		case BRAKING:
 			return braking + "";
-		case "Cornering":
+		case CORNERING:
 			return cornering + "";
-		case "Stability":
+		case STABILITY:
 			return stability + "";
-		case "Make":
-			return make + "";
-		case "Name":
-			return name + "";
-		case "BHP":
+		case MAKE:
+			return make;
+		case NAME:
+			return name;
+		case BHP:
 			return bhp + "";
-		case "Weight":
+		case WEIGHT:
 			return weight + "";
-		case "Price":
+		case PRICE:
 			return price + "";
+		case ID:
+			return id + "";
 		default:
 			return "";
 		}
-	}*/
+	}
 	
 	@Override
 	public String toString() {
