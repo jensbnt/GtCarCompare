@@ -16,10 +16,22 @@ public class Garage {
 	public static List<Integer> owned_cars;
 	public static List<CarClass> classes;
 	public static Path cardb = Paths.get("car_database");
+	public static Path owned_path = Paths.get(System.getProperty("user.home")).resolve("GTSport/owned_cars.txt");
 	
 	public static String[] classNames = { "N100", "N200", "N400", "N500", "N600", "N700", "N800", "N1000", "Group4", "Group3", "Group1", "GroupB", "GroupX" };
 
 	Garage() throws Exception {
+		/* Make owned car file */
+		if(!Files.exists(owned_path)) {
+			try {
+				Files.createDirectories(owned_path.getParent());
+				Files.createFile(owned_path);
+			} catch (IOException e) {
+				throw new Exception("Error finding/creating owned_cars.txt");
+			}
+		}
+		
+		/* Rest */
 		classes = new ArrayList<>();
 		loadOwnedCars();
 		
@@ -42,7 +54,7 @@ public class Garage {
 	}
 	
 	private static void loadOwnedCars() throws Exception {
-		try(BufferedReader reader = Files.newBufferedReader(cardb.resolve("owned_cars.txt"))) {
+		try(BufferedReader reader = Files.newBufferedReader(owned_path)) {
 			owned_cars = new ArrayList<>();
 			
 			String line = null;
@@ -57,7 +69,7 @@ public class Garage {
 	}
 	
 	public static void saveOwnedCars() {
-		try(BufferedWriter writer = Files.newBufferedWriter(cardb.resolve("owned_cars.txt"))) {
+		try(BufferedWriter writer = Files.newBufferedWriter(owned_path)) {
 			for(CarClass carClass : classes) {
 				for (Car car : carClass.getCars()) {
 					if (car.getOwned()) {
