@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class CarPanel extends JPanel{
 		
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
 		
-		this.setMaximumSize(new Dimension(8000,20));
+		this.setMaximumSize(new Dimension(8000,22));
 	}
 	
 	private void initLabels() {
@@ -45,6 +46,12 @@ public class CarPanel extends JPanel{
 		for (CarStats stat : CarStats.values()) {
 			if (stat == CarStats.NAME || stat == CarStats.MAKE) {
 				labels.add(new JLabel(car.getStringByStat(stat)));
+			} else if (stat == CarStats.WEIGHT) {
+				labels.add(new JLabel(car.getStringByStat(stat) + " kg"));
+			} else if (stat == CarStats.BHP) {
+				labels.add(new JLabel(car.getStringByStat(stat) + " BHP"));
+			} else if (stat == CarStats.PRICE) {
+				labels.add(new JLabel("Cr. " + NumberFormat.getIntegerInstance().format(car.getPrice())));
 			} else if (stat != CarStats.ID) {
 				labels.add(new JLabel(stat.toString() + ": " + car.getStringByStat(stat)));
 			}
@@ -81,7 +88,7 @@ public class CarPanel extends JPanel{
 		if (car.getOwned()) {
 			owned.setText("Owned");
 			owned.setBackground(Color.GREEN);
-			this.setBackground(Color.LIGHT_GRAY);
+			this.setBackground(Color.lightGray);
 		} else {
 			owned.setText("Not Owned");
 			owned.setBackground(Color.RED);

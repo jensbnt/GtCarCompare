@@ -53,6 +53,18 @@ public class Garage {
 		return classNames;
 	}
 	
+	public static int getValue() {
+		int totalValue = 0;
+		for(CarClass carClass : classes) {
+			for (Car car : carClass.getCars()) {
+				if (car.getOwned()) {
+					totalValue += car.getPrice();
+				}
+			}
+		}
+		return totalValue;
+	}
+	
 	private static void loadOwnedCars() throws Exception {
 		try(BufferedReader reader = Files.newBufferedReader(owned_path)) {
 			owned_cars = new ArrayList<>();

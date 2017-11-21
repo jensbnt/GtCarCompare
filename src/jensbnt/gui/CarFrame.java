@@ -3,18 +3,22 @@ package jensbnt.gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -27,14 +31,8 @@ public class CarFrame extends JFrame {
 	
 	/* Menu Items */
 	private JMenuBar menuBar;
-	private JMenu menu1;
-	private JMenuItem item1_1;
-	private JMenuItem item1_2;
-	private JMenu menu2;
-	private JCheckBoxMenuItem item2_1;
-	private JMenu item2_2;
-	private JMenuItem item2_2_1;
-	private JMenuItem item2_2_2;
+	private JMenu menu1_tools;
+	private JMenuItem item1_1_value;
 	
 	/* Sorting Items */
 	private ButtonGroup sortingGroup;
@@ -65,14 +63,16 @@ public class CarFrame extends JFrame {
 	private void initComponents() {
 		/* Init Menu Items */
 		menuBar = new JMenuBar();
-		menu1 = new JMenu("Menu 1");
-		item1_1 = new JMenuItem("Item 1_1");
-		item1_2 = new JMenuItem("Item 1_2");
-		menu2 = new JMenu("Menu 2");
-		item2_1 = new JCheckBoxMenuItem("Item 2_1");
-		item2_2 = new JMenu("Item 2_2");
-		item2_2_1 = new JMenuItem("Item 2_2_1");
-		item2_2_2 = new JMenuItem("Item 2_2_2");
+		menu1_tools = new JMenu("Tools");
+		item1_1_value = new JMenuItem("Calculate garage value");
+		item1_1_value.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(null, "Your garage is worth " +  NumberFormat.getIntegerInstance().format(Garage.getValue()) + " Credits.", "GT Sport - Garage Value", JOptionPane.PLAIN_MESSAGE);
+			}
+			
+		});
 		
 		/* Init Sorting Items */
 		sortingRadioButtons = new ArrayList<>();
@@ -97,8 +97,8 @@ public class CarFrame extends JFrame {
 		}
 		
 		/* Init Action Items */
-		buttonSort = new JButton("Sort");
-		checkOwned = new JCheckBox("Show only owned cars");
+		buttonSort = new JButton("Sort Cars");
+		checkOwned = new JCheckBox("Only show owned cars");
 		
 		/* Init Car Panel Items */
 		carPanel = new JPanel();
@@ -112,33 +112,32 @@ public class CarFrame extends JFrame {
 	
 	private void initMenu() {
 		setJMenuBar(menuBar);
-		menuBar.add(menu1);
-		menu1.add(item1_1);
-		menu1.add(item1_2);
-		menuBar.add(menu2);
-		item2_2.add(item2_2_1);
-		item2_2.add(item2_2_2);
-		menu2.add(item2_1);
-		menu2.add(item2_2);
+		menuBar.add(menu1_tools);
+		menu1_tools.add(item1_1_value);
 	}
 	
 	private void layoutComponents() {
-		/* Layout Sorting Items */
+		/* Layout Sorting & Class Items */
 		JPanel topPanel = new JPanel();
 		add(topPanel, BorderLayout.NORTH);
-		topPanel.setLayout(new GridLayout(1,5));
+		
+		JPanel sortPanel = new JPanel();
+		sortPanel.setBorder(BorderFactory.createTitledBorder("Sort Cars"));
+		sortPanel.setLayout(new GridLayout(2, 7));
 		for (JRadioButton button : sortingRadioButtons) {
-			topPanel.add(button);
+			sortPanel.add(button);
 		}
 		
-		/* Layout Class Items */
-		JPanel groupPanel = new JPanel();
-		add(groupPanel, BorderLayout.WEST);
-		groupPanel.setLayout(new GridLayout(classCheckBoxes.size(),1));
-		
+		JPanel classPanel = new JPanel();
+		classPanel.setBorder(BorderFactory.createTitledBorder("Select Classes"));
+		classPanel.setLayout(new GridLayout(2, 7));
 		for(JCheckBox checkBox : classCheckBoxes) {
-			groupPanel.add(checkBox);
+			classPanel.add(checkBox);
 		}
+		
+		topPanel.setLayout(new GridLayout(1,2));
+		topPanel.add(sortPanel);
+		topPanel.add(classPanel);
 		
 		/* Layout Car Panel */
 		add(scrollPane, BorderLayout.CENTER);
