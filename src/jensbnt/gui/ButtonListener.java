@@ -20,12 +20,14 @@ public class ButtonListener implements ActionListener {
 	private List<JRadioButton> sortingRadioButtons;
 	private List<JCheckBox> classCheckBoxes;
 	private JCheckBox checkOwned;
+	private JCheckBox checkFocus;
 	
-	public ButtonListener(JPanel carPanel, List<JRadioButton> sortingRadioButtons, List<JCheckBox> classCheckBoxes, JCheckBox checkOwned) {
+	public ButtonListener(JPanel carPanel, List<JRadioButton> sortingRadioButtons, List<JCheckBox> classCheckBoxes, JCheckBox checkOwned, JCheckBox checkFocus) {
 		this.carPanel = carPanel;
 		this.sortingRadioButtons = sortingRadioButtons;
 		this.classCheckBoxes = classCheckBoxes;
 		this.checkOwned = checkOwned;
+		this.checkFocus = checkFocus;
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -51,7 +53,11 @@ public class ButtonListener implements ActionListener {
 		Car[] list = CarSort.getSortedCars(CarComparator.getComparatorByStat(selectedSortStat), checkOwned.isSelected(), selectedGroups);
 		
 		for (Car car : list) {
-			carPanel.add(new CarPanel(car)); // CAR Focus
+			if (checkFocus.isSelected()) {
+				carPanel.add(new CarPanel(car, selectedSortStat));
+			} else {
+				carPanel.add(new CarPanel(car));
+			}
 		}
 		
 		carPanel.revalidate();

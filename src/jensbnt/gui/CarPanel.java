@@ -25,23 +25,21 @@ public class CarPanel extends JPanel{
 	private Car car;
 	
 	CarPanel(Car car) {
-		this(car, 0);
+		this(car, null);
 	}
 	
-	CarPanel(Car car, int focus) {
+	CarPanel(Car car, CarStats focus) {
 		this.car = car;
 		
-		initLabels();
+		initLabels(focus);
 		initLayout();
-		
-		focus(focus);
 		
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
 		
 		this.setMaximumSize(new Dimension(8000,22));
 	}
 	
-	private void initLabels() {
+	private void initLabels(CarStats focus) {
 		labels = new ArrayList<>();
 		for (CarStats stat : CarStats.values()) {
 			if (stat == CarStats.NAME || stat == CarStats.MAKE) {
@@ -54,6 +52,14 @@ public class CarPanel extends JPanel{
 				labels.add(new JLabel("Cr. " + NumberFormat.getIntegerInstance().format(car.getPrice())));
 			} else if (stat != CarStats.ID) {
 				labels.add(new JLabel(stat.toString() + ": " + car.getStringByStat(stat)));
+			}
+			
+			if (focus != null && labels.size() > 0) {
+				if(stat == focus || stat == CarStats.NAME || stat == CarStats.MAKE) {
+					labels.get(labels.size() - 1).setVisible(true);
+				} else {
+					labels.get(labels.size() - 1).setVisible(false);
+				}
 			}
 		}
 		
@@ -94,17 +100,5 @@ public class CarPanel extends JPanel{
 			owned.setBackground(Color.RED);
 			this.setBackground(Color.WHITE);
 		}
-	}
-	
-	private void focus(int focus) { // TEMP. DISABLED
-		/*if (focus != 0) {
-			for(int i = 2; i < labels.size(); i++) {
-				if(i == focus) {
-					labels.get(i).setVisible(true);
-				} else {
-					labels.get(i).setVisible(false);
-				}
-			}
-		}*/
 	}
 }

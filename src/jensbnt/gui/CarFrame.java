@@ -41,9 +41,12 @@ public class CarFrame extends JFrame {
 	/* Class Items */
 	private List<JCheckBox> classCheckBoxes;
 	
+	/* Option Items */
+	private JCheckBox checkOwned;
+	private JCheckBox checkFocus;
+	
 	/* Action Items */
 	private JButton buttonSort;
-	private JCheckBox checkOwned;
 	
 	/* Car Panel Items */
 	private JPanel carPanel;
@@ -96,9 +99,12 @@ public class CarFrame extends JFrame {
 			classCheckBoxes.add(new JCheckBox(classNames[index]));
 		}
 		
+		/* Init Option Items */
+		checkOwned = new JCheckBox("Only show owned cars");
+		checkFocus = new JCheckBox("Focus in filtered fields");
+		
 		/* Init Action Items */
 		buttonSort = new JButton("Sort Cars");
-		checkOwned = new JCheckBox("Only show owned cars");
 		
 		/* Init Car Panel Items */
 		carPanel = new JPanel();
@@ -117,10 +123,11 @@ public class CarFrame extends JFrame {
 	}
 	
 	private void layoutComponents() {
-		/* Layout Sorting & Class Items */
+		/* Layout Sorting, Class and Option Items */
 		JPanel topPanel = new JPanel();
 		add(topPanel, BorderLayout.NORTH);
 		
+		/* Sorting */
 		JPanel sortPanel = new JPanel();
 		sortPanel.setBorder(BorderFactory.createTitledBorder("Sort Cars"));
 		sortPanel.setLayout(new GridLayout(2, 7));
@@ -128,6 +135,7 @@ public class CarFrame extends JFrame {
 			sortPanel.add(button);
 		}
 		
+		/* Class */
 		JPanel classPanel = new JPanel();
 		classPanel.setBorder(BorderFactory.createTitledBorder("Select Classes"));
 		classPanel.setLayout(new GridLayout(2, 7));
@@ -135,9 +143,18 @@ public class CarFrame extends JFrame {
 			classPanel.add(checkBox);
 		}
 		
-		topPanel.setLayout(new GridLayout(1,2));
+		/* Option */
+		JPanel optionPanel = new JPanel();
+		optionPanel.setBorder(BorderFactory.createTitledBorder("Options"));
+		optionPanel.setLayout(new GridLayout(2,0));
+		optionPanel.add(checkOwned);
+		optionPanel.add(checkFocus);
+		
+		/* Parent */
+		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 		topPanel.add(sortPanel);
 		topPanel.add(classPanel);
+		topPanel.add(optionPanel);
 		
 		/* Layout Car Panel */
 		add(scrollPane, BorderLayout.CENTER);
@@ -148,10 +165,9 @@ public class CarFrame extends JFrame {
 		add(bottomPanel, BorderLayout.SOUTH);
 		bottomPanel.setLayout(new FlowLayout());
 		bottomPanel.add(buttonSort);
-		bottomPanel.add(checkOwned);
 	}
 	
 	private void initListeners() {
-		buttonSort.addActionListener(new ButtonListener(carPanel, sortingRadioButtons, classCheckBoxes, checkOwned));
+		buttonSort.addActionListener(new ButtonListener(carPanel, sortingRadioButtons, classCheckBoxes, checkOwned, checkFocus));
 	}
 }
