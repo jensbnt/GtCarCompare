@@ -41,7 +41,7 @@ public class ButtonListener implements ActionListener {
 			}
 		}
 		
-		/* Get car groups */
+		/* Get car class */
 		List<Integer> selectedGroups = new ArrayList<>();
 		
 		for(JCheckBox check : classCheckBoxes) {

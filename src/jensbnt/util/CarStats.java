@@ -9,9 +9,10 @@ public enum CarStats {
 	BRAKING(5, "Braking"),
 	CORNERING(6, "Cornering"),
 	STABILITY(7, "Stability"),
-	BHP(8, "Bhp"),
-	WEIGHT(9, "Weight"),
-	PRICE(10, "Price");
+	TOTAL_SCORE(8, "Total Score"),
+	POWER(9, "Power"),
+	WEIGHT(10, "Weight"),
+	PRICE(11, "Price");
 
 	private final int value;
 	private final String name;

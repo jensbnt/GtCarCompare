@@ -64,6 +64,10 @@ public class Car {
 		return stability;
 	}
 	
+	public double getTotalScore() {
+		return maxSpeed + acceleration + braking + cornering + stability;
+	}
+	
 	public int getBhp() {
 		return bhp;
 	}
@@ -100,11 +104,13 @@ public class Car {
 			return cornering + "";
 		case STABILITY:
 			return stability + "";
+		case TOTAL_SCORE:
+			return String.format("%.1f", getTotalScore());
 		case MAKE:
 			return make;
 		case NAME:
 			return name;
-		case BHP:
+		case POWER:
 			return bhp + "";
 		case WEIGHT:
 			return weight + "";

@@ -46,7 +46,7 @@ public class CarPanel extends JPanel{
 				labels.add(new JLabel(car.getStringByStat(stat)));
 			} else if (stat == CarStats.WEIGHT) {
 				labels.add(new JLabel(car.getStringByStat(stat) + " kg"));
-			} else if (stat == CarStats.BHP) {
+			} else if (stat == CarStats.POWER) {
 				labels.add(new JLabel(car.getStringByStat(stat) + " BHP"));
 			} else if (stat == CarStats.PRICE) {
 				labels.add(new JLabel("Cr. " + NumberFormat.getIntegerInstance().format(car.getPrice())));

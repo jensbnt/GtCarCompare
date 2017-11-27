@@ -1,0 +1,31 @@
+1,Dodge,SRT Tomahawk VGT Technology,10.0,10.0,6.5,6.6,10.0,2586,0,1000000
+2,McLaren,Ultimate VGT,10.0,10.0,6.5,6.9,6.1,1134,0,1000000
+3,Dodge,SRT Tomahawk VGT Racing,10.0,10.0,5.7,5.8,6.8,1449,0,1000000
+4,Bugatti,Bugatti VGT,10.0,9.4,4.7,4.7,6.5,1626,0,1000000
+5,Mazda,LM55 VGT,10.0,8.4,4.5,4.5,6.4,791,0,1000000
+6,Dodge,SRT Tomahawk VGT Street,10.0,8.4,3.9,4.0,5.9,1006,0,1000000
+7,Peugeot,Peugeot VGT,9.6,8.5,3.7,3.8,6.0,873,0,1000000
+8,Mitsubishi,Concept XR-PHEV Evolution VGT,7.0,8.01,4.1,4.2,7.2,502,0,1000000
+9,Aston Martin,DP-100 VGT,9.5,8.0,3.4,3.5,5.8,799,0,1000000
+10,Volkswagen,GTI Supersport VGT,7.4,7.6,3.8,3.8,6.9,551,0,1000000
+11,Subaru,Viziv GT VGT,8.7,7.2,3.6,3.5,6.1,630,0,1000000
+12,Volkswagen,GTI Roadster VGT,7.7,7.6,3.6,3.6,6.5,551,0,1000000
+13,Chaparral,Chaparral 2X VGT,10.0,4.4,4.3,4.2,5.8,905,0,1000000
+14,Toyota,FT-1 VGT,7.7,5.8,4.5,4.5,6.2,614,0,1000000
+15,Hyundai,N 2025 VGT,10.0,3.9,4.4,4.5,5.8,870,0,1000000
+16,Lexus,LF-LC GT VGT,7.7,5.3,4.5,4.5,6.4,612,0,1000000
+17,Fittipaldi,EF7 VGT,7.5,5.6,4.2,4.3,6.0,598,0,1000000
+18,Alpine,Alpine VGT Race Mode,6.8,5.7,4.1,4.1,6.8,443,0,1000000
+19,BMW,BMW VGT,7.0,5.3,4.1,4.2,6.5,541,0,1000000
+20,Renault Sport,RS 01 2016,6.3,6.0,4.2,4.2,6.0,542,0,500000
+21,Mercedes-Benz,AMG VGT Racing,7.6,5.5,3.9,3.9,5.6,590,0,1000000
+22,Nissan,Nissan Concept 2020 VGT,8.7,5.3,3.0,3.0,5.2,697,0,1000000
+23,Peugeot,L500R Hybrid VGT 2017,6.7,6.2,2.8,2.7,6.8,268,0,1000000
+24,Alpine,Alpine VGT,8.4,4.9,3.0,3.1,5.6,443,0,1000000
+25,Mini,Clubman VGT,6.6,6.7,2.9,2.9,5.7,388,0,1000000
+26,Mercedes-Benz,AMG VGT,9.3,4.5,2.4,2.4,5.1,576,0,1000000
+27,Infiniti,Concept VGT,8.0,5.0,2.9,2.9,4.7,535,0,1000000
+28,Honda,Honda Sports VGT,7.2,5.1,2.8,2.9,5.4,403,0,1000000
+29,Honda,Honda Project 2 and 4,6.0,3.8,1.9,2.0,4.5,211,0,100000
+30,Daihatsu,Daihatsu Copen RJ VGT,3.7,2.5,1.8,1.7,6.1,146,0,1000000
+31,BMW,i3 2015,1.4,2.6,1.4,1.2,5.9,167,0,49900

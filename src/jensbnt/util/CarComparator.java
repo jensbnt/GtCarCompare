@@ -12,6 +12,7 @@ public class CarComparator {
 	public static final Comparator<Car> byBraking = (c1, c2) -> Double.compare(c2.getBraking(), c1.getBraking());
 	public static final Comparator<Car> byCornering = (c1, c2) -> Double.compare(c2.getCornering(), c1.getCornering());
 	public static final Comparator<Car> byStability = (c1, c2) -> Double.compare(c2.getStability(), c1.getStability());
+	public static final Comparator<Car> byTotalScore = (c1, c2) -> Double.compare(c2.getTotalScore(), c1.getTotalScore());
 	public static final Comparator<Car> byMake = (c1, c2) -> c1.getMake().compareTo(c2.getMake());
 	public static final Comparator<Car> byName = (c1, c2) -> c1.getName().compareTo(c2.getName());
 	public static final Comparator<Car> byBhp = (c1, c2) -> Integer.compare(c2.getBhp(), c1.getBhp());
@@ -31,11 +32,13 @@ public class CarComparator {
 			return byCornering;
 		case STABILITY:
 			return byStability;
+		case TOTAL_SCORE:
+			return byTotalScore;
 		case MAKE:
 			return byMake;
 		case NAME:
 			return byName;
-		case BHP:
+		case POWER:
 			return byBhp;
 		case WEIGHT:
 			return byWeight;

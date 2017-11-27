@@ -11,6 +11,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import jensbnt.util.CarClasses;
+
 public class Garage {
 
 	public static List<Integer> owned_cars;
@@ -35,9 +37,9 @@ public class Garage {
 		classes = new ArrayList<>();
 		loadOwnedCars();
 		
-		for(int index = 0; index < classNames.length; index++) {
+		for(CarClasses carClass : CarClasses.values()) {
 			classes.add(new CarClass());
-			parseGroup(classes.get(index).getCars(), classNames[index], index);
+			parseClass(classes.get(classes.size() - 1).getCars(), carClass);
 		}
 	}
 	
@@ -94,26 +96,28 @@ public class Garage {
 		}
 	}
 	
-	private static void parseGroup(List<Car> group, String classname, int groupIndex) throws Exception {
-		try(BufferedReader reader = Files.newBufferedReader(cardb.resolve(classname + ".txt"), StandardCharsets.ISO_8859_1)) {	
+	private static void parseClass(List<Car> group, CarClasses carClass) throws Exception {
+		try(BufferedReader reader = Files.newBufferedReader(cardb.resolve(carClass.getFileName()), StandardCharsets.ISO_8859_1)) {	
 			String line = null;
 			while((line = reader.readLine()) != null) {
-				parseCar(group, line, groupIndex);
+				parseCar(group, line, carClass.getValue());
 			}
 		} catch (FileNotFoundException e) {
-			throw new Exception("'" + classname + "' not found!");
+			throw new Exception("'" + carClass.toString() + "' not found!");
 		} catch (IOException e) {
-			throw new Exception("Error loading class: " + classname);
+			throw new Exception("Error loading class: " + carClass.toString());
+		}catch (Exception e) {
+			throw new Exception("Error loading class: " + carClass.toString());
 		}
 	}
 	
-	private static void parseCar(List<Car> group, String rawLine, int groupIndex) throws Exception {
+	private static void parseCar(List<Car> group, String rawLine, int classIndex) throws Exception {
 		String[] splittedLine = rawLine.split(",");
 		
 		if (splittedLine.length != 11)
 			throw new Exception("Parsing error");
 		
-		int id = (1+groupIndex)*1000 + Integer.parseInt(splittedLine[0]);
+		int id = classIndex*1000 + Integer.parseInt(splittedLine[0]);
 		String make = splittedLine[1];
 		String name = splittedLine[2];
 		double maxSpeed = Double.parseDouble(splittedLine[3]);

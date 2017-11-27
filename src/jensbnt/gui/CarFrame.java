@@ -24,6 +24,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
 import jensbnt.compareApp.Garage;
+import jensbnt.util.CarClasses;
 import jensbnt.util.CarStats;
 
 @SuppressWarnings("serial")
@@ -93,10 +94,9 @@ public class CarFrame extends JFrame {
 		/* Init Class Items */
 		classCheckBoxes = new ArrayList<JCheckBox>();
 		
-		String[] classNames = Garage.getClassNames();
 		
-		for (int index = 0; index < classNames.length; index++) {
-			classCheckBoxes.add(new JCheckBox(classNames[index]));
+		for(CarClasses carClass : CarClasses.values()) {
+			classCheckBoxes.add(new JCheckBox(carClass.toString()));
 		}
 		
 		/* Init Option Items */
