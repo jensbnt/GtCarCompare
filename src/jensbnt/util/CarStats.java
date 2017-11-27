@@ -29,14 +29,4 @@ public enum CarStats {
 	public int getValue() {
 		return value;
 	}
-	
-	public static CarStats value(String name) {
-		for(CarStats stat : CarStats.values()) {
-			if(stat.toString().equals(name)) {
-				return stat;
-			}
-		}
-		
-		return null;
-	}
 }

@@ -10,12 +10,12 @@ import jensbnt.compareApp.Garage;
 
 public class CarSort {
 
-	public static Car[] getSortedCars(Comparator<Car> compare, Boolean filterOwned, List<Integer> selectedGroup) {
+	public static Car[] getSortedCars(Comparator<Car> compare, Boolean filterOwned, List<CarClasses> selectedClasses) {
 		List<Car> master = new ArrayList<>();
 		
 		/* Add groups */
-		for (Integer index : selectedGroup) {
-			master = appendGroup(master, Garage.getClass(index));
+		for (CarClasses carClass : selectedClasses) {
+			master = appendGroup(master, Garage.getClass(carClass));
 		}
 		
 		/* return master group */

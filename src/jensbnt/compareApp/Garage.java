@@ -20,8 +20,6 @@ public class Garage {
 	public static Path cardb = Paths.get("car_database");
 	public static Path owned_path = Paths.get(System.getProperty("user.home")).resolve("GTSport/owned_cars.txt");
 	
-	public static String[] classNames = { "N100", "N200", "N400", "N500", "N600", "N700", "N800", "N1000", "Group4", "Group3", "Group1", "GroupB", "GroupX" };
-
 	Garage() throws Exception {
 		/* Make owned car file */
 		if(!Files.exists(owned_path)) {
@@ -38,21 +36,19 @@ public class Garage {
 		loadOwnedCars();
 		
 		for(CarClasses carClass : CarClasses.values()) {
-			classes.add(new CarClass());
+			classes.add(new CarClass(carClass));
 			parseClass(classes.get(classes.size() - 1).getCars(), carClass);
 		}
 	}
 	
-	public static List<Car> getClass(int index) {
-		try {
-			return classes.get(index).getCars();
-		} catch (IndexOutOfBoundsException e) {
-			return new ArrayList<Car>();
+	public static List<Car> getClass(CarClasses carClassEnum) {
+		for(CarClass carClass : classes) {
+			if (carClass.getCarClass() == carClassEnum) {
+				return carClass.getCars();
+			}
 		}
-	}
-	
-	public static String[] getClassNames() {
-		return classNames;
+		
+		return new ArrayList<Car>();
 	}
 	
 	public static int getValue() {

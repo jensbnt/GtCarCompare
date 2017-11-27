@@ -20,7 +20,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
 import jensbnt.compareApp.Garage;
@@ -37,10 +36,10 @@ public class CarFrame extends JFrame {
 	
 	/* Sorting Items */
 	private ButtonGroup sortingGroup;
-	private List<JRadioButton> sortingRadioButtons;
+	private List<StatRadioButton> sortingRadioButtons;
 
 	/* Class Items */
-	private List<JCheckBox> classCheckBoxes;
+	private List<ClassCheckBox> classCheckBoxes;
 	
 	/* Option Items */
 	private JCheckBox checkOwned;
@@ -81,22 +80,21 @@ public class CarFrame extends JFrame {
 		/* Init Sorting Items */
 		sortingRadioButtons = new ArrayList<>();
 		for(CarStats carStat : CarStats.values()) {
-			sortingRadioButtons.add(new JRadioButton(carStat.toString()));
+			sortingRadioButtons.add(new StatRadioButton(carStat));
 		}
 		
 		sortingGroup = new ButtonGroup();
-		for (JRadioButton button : sortingRadioButtons) {
+		for (StatRadioButton button : sortingRadioButtons) {
 			sortingGroup.add(button);
 		}
 		
 		sortingRadioButtons.get(0).setSelected(true);
 		
 		/* Init Class Items */
-		classCheckBoxes = new ArrayList<JCheckBox>();
-		
+		classCheckBoxes = new ArrayList<>();
 		
 		for(CarClasses carClass : CarClasses.values()) {
-			classCheckBoxes.add(new JCheckBox(carClass.toString()));
+			classCheckBoxes.add(new ClassCheckBox(carClass));
 		}
 		
 		/* Init Option Items */
@@ -131,7 +129,7 @@ public class CarFrame extends JFrame {
 		JPanel sortPanel = new JPanel();
 		sortPanel.setBorder(BorderFactory.createTitledBorder("Sort Cars"));
 		sortPanel.setLayout(new GridLayout(2, 7));
-		for (JRadioButton button : sortingRadioButtons) {
+		for (StatRadioButton button : sortingRadioButtons) {
 			sortPanel.add(button);
 		}
 		
@@ -139,7 +137,7 @@ public class CarFrame extends JFrame {
 		JPanel classPanel = new JPanel();
 		classPanel.setBorder(BorderFactory.createTitledBorder("Select Classes"));
 		classPanel.setLayout(new GridLayout(2, 7));
-		for(JCheckBox checkBox : classCheckBoxes) {
+		for(ClassCheckBox checkBox : classCheckBoxes) {
 			classPanel.add(checkBox);
 		}
 		

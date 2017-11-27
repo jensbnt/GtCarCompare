@@ -7,9 +7,9 @@ import java.util.List;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 
 import jensbnt.compareApp.Car;
+import jensbnt.util.CarClasses;
 import jensbnt.util.CarComparator;
 import jensbnt.util.CarSort;
 import jensbnt.util.CarStats;
@@ -17,12 +17,12 @@ import jensbnt.util.CarStats;
 public class ButtonListener implements ActionListener {
 
 	private JPanel carPanel;
-	private List<JRadioButton> sortingRadioButtons;
-	private List<JCheckBox> classCheckBoxes;
+	private List<StatRadioButton> sortingRadioButtons;
+	private List<ClassCheckBox> classCheckBoxes;
 	private JCheckBox checkOwned;
 	private JCheckBox checkFocus;
 	
-	public ButtonListener(JPanel carPanel, List<JRadioButton> sortingRadioButtons, List<JCheckBox> classCheckBoxes, JCheckBox checkOwned, JCheckBox checkFocus) {
+	public ButtonListener(JPanel carPanel, List<StatRadioButton> sortingRadioButtons, List<ClassCheckBox> classCheckBoxes, JCheckBox checkOwned, JCheckBox checkFocus) {
 		this.carPanel = carPanel;
 		this.sortingRadioButtons = sortingRadioButtons;
 		this.classCheckBoxes = classCheckBoxes;
@@ -35,22 +35,23 @@ public class ButtonListener implements ActionListener {
 		
 		/* Get sort method */
 		CarStats selectedSortStat = CarStats.ID;
-		for (JRadioButton button : sortingRadioButtons) {
+		for (StatRadioButton button : sortingRadioButtons) {
 			if (button.isSelected()) {
-				selectedSortStat = CarStats.value(button.getText());
+				selectedSortStat = button.getCarStat();
 			}
 		}
 		
 		/* Get car class */
-		List<Integer> selectedGroups = new ArrayList<>();
+		List<CarClasses> selectedClasses = new ArrayList<>();
 		
-		for(JCheckBox check : classCheckBoxes) {
-			if (check.isSelected())
-				selectedGroups.add(classCheckBoxes.indexOf(check));
+		for(ClassCheckBox check : classCheckBoxes) {
+			if (check.isSelected()) {
+				selectedClasses.add(check.getCarClass());
+			}
 		}
 		
 		/* Get car list */
-		Car[] list = CarSort.getSortedCars(CarComparator.getComparatorByStat(selectedSortStat), checkOwned.isSelected(), selectedGroups);
+		Car[] list = CarSort.getSortedCars(CarComparator.getComparatorByStat(selectedSortStat), checkOwned.isSelected(), selectedClasses);
 		
 		for (Car car : list) {
 			if (checkFocus.isSelected()) {
