@@ -10,8 +10,8 @@ public class CompareApp {
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		try {
-			//UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -25,6 +25,7 @@ public class CompareApp {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
 		Garage garage = null;
 		try {
 			garage = new Garage();

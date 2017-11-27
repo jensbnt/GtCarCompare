@@ -6,24 +6,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JCheckBox;
-import javax.swing.JPanel;
 
 import jensbnt.compareApp.Car;
 import jensbnt.util.CarClasses;
 import jensbnt.util.CarComparator;
 import jensbnt.util.CarSort;
 import jensbnt.util.CarStats;
+import jensbnt.util.CarTableModel;
 
 public class ButtonListener implements ActionListener {
 
-	private JPanel carPanel;
+	private CarTableModel carTableModel;
 	private List<StatRadioButton> sortingRadioButtons;
 	private List<ClassCheckBox> classCheckBoxes;
 	private JCheckBox checkOwned;
 	private JCheckBox checkFocus;
 	
-	public ButtonListener(JPanel carPanel, List<StatRadioButton> sortingRadioButtons, List<ClassCheckBox> classCheckBoxes, JCheckBox checkOwned, JCheckBox checkFocus) {
-		this.carPanel = carPanel;
+	public ButtonListener(CarTableModel carTableModel, List<StatRadioButton> sortingRadioButtons, List<ClassCheckBox> classCheckBoxes, JCheckBox checkOwned, JCheckBox checkFocus) {
+		this.carTableModel = carTableModel;
 		this.sortingRadioButtons = sortingRadioButtons;
 		this.classCheckBoxes = classCheckBoxes;
 		this.checkOwned = checkOwned;
@@ -31,7 +31,7 @@ public class ButtonListener implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
-		carPanel.removeAll();
+		carTableModel.setRowCount(0);
 		
 		/* Get sort method */
 		CarStats selectedSortStat = CarStats.ID;
@@ -55,13 +55,10 @@ public class ButtonListener implements ActionListener {
 		
 		for (Car car : list) {
 			if (checkFocus.isSelected()) {
-				carPanel.add(new CarPanel(car, selectedSortStat));
-			} else {
-				carPanel.add(new CarPanel(car));
+				System.out.println("FOCUS IS DISABLED");
 			}
+			
+			carTableModel.addRow(car);
 		}
-		
-		carPanel.revalidate();
-		carPanel.repaint();
 	}
 }

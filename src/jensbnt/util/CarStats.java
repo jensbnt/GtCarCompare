@@ -29,4 +29,14 @@ public enum CarStats {
 	public int getValue() {
 		return value;
 	}
+	
+	public static CarStats getName(int value) {
+		for(CarStats stat : values()) {
+			if (stat.getValue() == value) {
+				return stat;
+			}
+		}
+		
+		return null;
+	}
 }

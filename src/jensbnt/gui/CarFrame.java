@@ -21,10 +21,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import jensbnt.compareApp.Garage;
 import jensbnt.util.CarClasses;
 import jensbnt.util.CarStats;
+import jensbnt.util.CarTableModel;
 
 @SuppressWarnings("serial")
 public class CarFrame extends JFrame {
@@ -49,7 +51,7 @@ public class CarFrame extends JFrame {
 	private JButton buttonSort;
 	
 	/* Car Panel Items */
-	private JPanel carPanel;
+	private JTable carTable;
 	private JScrollPane scrollPane;
 	
 	public CarFrame() {
@@ -105,8 +107,11 @@ public class CarFrame extends JFrame {
 		buttonSort = new JButton("Sort Cars");
 		
 		/* Init Car Panel Items */
-		carPanel = new JPanel();
-		scrollPane = new JScrollPane(carPanel);
+		carTable = new JTable(new CarTableModel());
+		carTable.setAutoCreateRowSorter(true);
+		carTable.getTableHeader().setReorderingAllowed(false);
+		scrollPane = new JScrollPane(carTable);
+		carTable.setFillsViewportHeight(true);
 		
 		/* Init window */
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -150,13 +155,12 @@ public class CarFrame extends JFrame {
 		
 		/* Parent */
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
-		topPanel.add(sortPanel);
+		//topPanel.add(sortPanel);
 		topPanel.add(classPanel);
 		topPanel.add(optionPanel);
 		
 		/* Layout Car Panel */
 		add(scrollPane, BorderLayout.CENTER);
-		carPanel.setLayout(new BoxLayout(carPanel, BoxLayout.Y_AXIS));
 		
 		/* Layout Action Items */
 		JPanel bottomPanel = new JPanel();
@@ -166,6 +170,6 @@ public class CarFrame extends JFrame {
 	}
 	
 	private void initListeners() {
-		buttonSort.addActionListener(new ButtonListener(carPanel, sortingRadioButtons, classCheckBoxes, checkOwned, checkFocus));
+		buttonSort.addActionListener(new ButtonListener((CarTableModel) carTable.getModel(), sortingRadioButtons, classCheckBoxes, checkOwned, checkFocus));
 	}
 }
