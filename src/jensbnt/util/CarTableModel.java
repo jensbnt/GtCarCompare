@@ -12,13 +12,18 @@ import jensbnt.compareApp.Car;
 public class CarTableModel extends DefaultTableModel {
 	
 	private List<Car> listCars;
+	private List<CarStats> columns;
     
     public CarTableModel() {
+        listCars = new ArrayList<>();
+        columns = new ArrayList<>();
+        
     	for(CarStats stat : CarStats.values()) {
-    		addColumn(stat);
+    		if (stat != CarStats.ID) {
+    			columns.add(stat);
+    			addColumn(stat);
+    		}
     	}
-    	
-        this.listCars = new ArrayList<Car>();
     }
     
     public void addRow(Car car) {
@@ -26,10 +31,14 @@ public class CarTableModel extends DefaultTableModel {
     	setRowCount(getRowCount()+1);
     }
     
+    public Car getCarAt(int row) {
+    	return listCars.get(row);
+    }
+    
     @Override
     public Object getValueAt(int row, int column) {
     	Car car = listCars.get(row);
-    	CarStats stat = CarStats.getName(column);
+    	CarStats stat = columns.get(column);
     	
     	switch (stat) {
     	case ID:

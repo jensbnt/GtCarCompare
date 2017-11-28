@@ -1,6 +1,7 @@
 package jensbnt.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -24,7 +25,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
+import jensbnt.compareApp.Car;
 import jensbnt.compareApp.Garage;
 import jensbnt.util.CarClasses;
 import jensbnt.util.CarStats;
@@ -50,6 +55,10 @@ public class CarFrame extends JFrame {
 	private JCheckBox checkFocus;
 	private JCheckBox selectAll;
 	
+	/* Car Option Items */
+	private JButton buttonEditCar;
+	private JButton buttonToggleOwn;
+	
 	/* Action Items */
 	private JButton buttonSort;
 	
@@ -69,20 +78,12 @@ public class CarFrame extends JFrame {
 	}
 	
 	private void initComponents() {
-		/* Init Menu Items */
+		/* Initialize Menu Items */
 		menuBar = new JMenuBar();
 		menu1_tools = new JMenu("Tools");
 		item1_1_value = new JMenuItem("Calculate garage value");
-		item1_1_value.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				JOptionPane.showMessageDialog(null, "Your garage is worth " +  NumberFormat.getIntegerInstance().format(Garage.getValue()) + " Credits.", "GT Sport - Garage Value", JOptionPane.PLAIN_MESSAGE);
-			}
-			
-		});
 		
-		/* Init Sorting Items */
+		/* Initialize Sorting Items */
 		sortingRadioButtons = new ArrayList<>();
 		for(CarStats carStat : CarStats.values()) {
 			sortingRadioButtons.add(new StatRadioButton(carStat));
@@ -95,29 +96,36 @@ public class CarFrame extends JFrame {
 		
 		sortingRadioButtons.get(0).setSelected(true);
 		
-		/* Init Class Items */
+		/* Initialize Class Items */
 		classCheckBoxes = new ArrayList<>();
 		
 		for(CarClasses carClass : CarClasses.values()) {
 			classCheckBoxes.add(new ClassCheckBox(carClass));
 		}
 		
-		/* Init Option Items */
+		/* Initialize Option Items */
 		checkOwned = new JCheckBox("Only show owned cars");
 		checkFocus = new JCheckBox("Focus in filtered fields");
 		selectAll = new JCheckBox("Select all classes");
 		
-		/* Init Action Items */
+		/* Initialize Car Option Items */
+		buttonEditCar = new JButton("Edit selected car");
+		buttonEditCar.setEnabled(false);
+		buttonToggleOwn = new JButton("Toggle selected car's ownership");
+		buttonToggleOwn.setEnabled(false);
+		
+		/* Initialize Action Items */
 		buttonSort = new JButton("Sort Cars");
 		
-		/* Init Car Panel Items */
+		/* Initialize Car Panel Items */
 		carTable = new JTable(new CarTableModel());
 		//carTable.setAutoCreateRowSorter(true);
 		carTable.getTableHeader().setReorderingAllowed(false);
 		scrollPane = new JScrollPane(carTable);
 		carTable.setFillsViewportHeight(true);
+		carTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		/* Init window */
+		/* Initialize window */
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(750, 500);
 		setLocation(20, 20);
@@ -158,11 +166,19 @@ public class CarFrame extends JFrame {
 		optionPanel.add(checkFocus);
 		optionPanel.add(selectAll);
 		
+		/* Car Option */
+		JPanel carOptionPanel = new JPanel();
+		carOptionPanel.setBorder(BorderFactory.createTitledBorder("Car Selection Options"));
+		carOptionPanel.setLayout(new GridLayout(2,0));
+		carOptionPanel.add(buttonEditCar);
+		carOptionPanel.add(buttonToggleOwn);
+		
 		/* Parent */
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 		topPanel.add(sortPanel);
 		topPanel.add(classPanel);
 		topPanel.add(optionPanel);
+		topPanel.add(carOptionPanel);
 		
 		/* Layout Car Panel */
 		add(scrollPane, BorderLayout.CENTER);
@@ -175,8 +191,17 @@ public class CarFrame extends JFrame {
 	}
 	
 	private void initListeners() {
-		buttonSort.addActionListener(new ButtonListener((CarTableModel) carTable.getModel(), sortingRadioButtons, classCheckBoxes, checkOwned, checkFocus));
-	
+		/* Initialize Menu Listeners */
+		item1_1_value.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(null, "Your garage is worth " +  NumberFormat.getIntegerInstance().format(Garage.getValue()) + " Credits.", "GT Sport - Garage Value", JOptionPane.PLAIN_MESSAGE);
+			}
+			
+		});
+		
+		/* Initialize Option Listeners */
 		selectAll.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -188,6 +213,51 @@ public class CarFrame extends JFrame {
 					for (ClassCheckBox check : classCheckBoxes) {
 						check.setSelected(false);
 					}
+				}
+			}
+		});
+		
+		/* Initialize Action Listeners */
+		buttonSort.addActionListener(new ButtonListener((CarTableModel) carTable.getModel(), sortingRadioButtons, classCheckBoxes, checkOwned, checkFocus));
+
+		/* Initialize Car Option Listeners */
+		buttonToggleOwn.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				CarTableModel model = (CarTableModel) carTable.getModel();
+				Car car = model.getCarAt(carTable.getSelectedRow());
+				
+				car.toggleOwned();
+				
+				if (car.getOwned()) {
+					buttonToggleOwn.setBackground(Color.GREEN);
+				} else {
+					buttonToggleOwn.setBackground(Color.RED);
+				}
+			}
+			
+		});
+		
+		/* Initialize Car Panel Listeners */
+		carTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if(carTable.getSelectedRow() != -1) {
+					buttonEditCar.setEnabled(true);
+					buttonToggleOwn.setEnabled(true);
+					
+					CarTableModel model = (CarTableModel) carTable.getModel();
+					Car car = model.getCarAt(carTable.getSelectedRow());
+					
+					if (car.getOwned()) {
+						buttonToggleOwn.setBackground(Color.GREEN);
+					} else {
+						buttonToggleOwn.setBackground(Color.RED);
+					}
+				} else {
+					buttonEditCar.setEnabled(false);
+					buttonToggleOwn.setEnabled(false);
 				}
 			}
 		});
