@@ -11,8 +11,12 @@ public class CarClass {
 	private List<Car> cars;
 
 	CarClass(CarClasses carClass) {
+		this(carClass, new ArrayList<>());
+	}
+	
+	CarClass(CarClasses carClass, List<Car> cars) {
 		this.carClass = carClass;
-		cars = new ArrayList<>();
+		this.cars = cars;
 	}
 	
 	public CarClasses getCarClass() {

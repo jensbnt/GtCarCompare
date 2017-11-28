@@ -57,4 +57,9 @@ public class CarTableModel extends DefaultTableModel {
     public boolean isCellEditable(int row, int col) {
     	return false;
     }
+
+	public void clear() {
+		listCars.clear();
+		setRowCount(0);
+	}
 }

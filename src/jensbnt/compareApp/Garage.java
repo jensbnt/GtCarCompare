@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import jensbnt.database.CarDatabase;
 import jensbnt.util.CarClasses;
 
 public class Garage {
@@ -20,7 +21,12 @@ public class Garage {
 	public static Path cardb = Paths.get("car_database");
 	public static Path owned_path = Paths.get(System.getProperty("user.home")).resolve("GTSport/owned_cars.txt");
 	
+	private static Boolean offlineMode = false;
+	
 	Garage() throws Exception {
+		@SuppressWarnings("unused")
+		CarDatabase cardatabase = new CarDatabase();
+		
 		/* Make owned car file */
 		if(!Files.exists(owned_path)) {
 			try {
@@ -31,13 +37,55 @@ public class Garage {
 			}
 		}
 		
-		/* Rest */
-		classes = new ArrayList<>();
+		/* Load owned cars */
 		loadOwnedCars();
 		
-		for(CarClasses carClass : CarClasses.values()) {
-			classes.add(new CarClass(carClass));
-			parseClass(classes.get(classes.size() - 1).getCars(), carClass);
+		/* Load cars */
+		classes = new ArrayList<>();
+		offlineMode = !CarDatabase.hasValidConnection();
+		
+		if (offlineMode) {	// Load from files
+			for(CarClasses carClass : CarClasses.values()) {
+				System.out.println("Parsing class " + carClass.toString() + " from files " + "(" + carClass.getValue() + "/" + CarClasses.values().length + ")");
+				classes.add(new CarClass(carClass));
+				parseClassFromFiles(classes.get(classes.size() - 1).getCars(), carClass);
+			}
+		} else {	// Load from database
+			for(CarClasses carClass : CarClasses.values()) {
+				System.out.println("Fetching class " + carClass.toString() + " from database " + "(" + carClass.getValue() + "/" + CarClasses.values().length + ")");
+				List<Car> cars = CarDatabase.getCarsFromDatabase(carClass);
+				classes.add(new CarClass(carClass, cars));
+			}
+		}
+		
+		CarDatabase.brakeConnection();
+	}
+	
+	public static Boolean offlineModeActivated() {
+		return offlineMode;
+	}
+	
+	@SuppressWarnings("unused")
+	private static void loadCarsToDatabase() { // DANGEROUS FUNCTION!!!
+		int totalCars = 0;
+		for (CarClass carClass : classes) {
+			totalCars += carClass.getCars().size();
+		}
+		
+		int carCounter = 1;
+		for (CarClass carClass : classes) {
+			System.out.println("Loading carclass: " + carClass.getCarClass().toString());
+			
+			// ADD TABLE
+			CarDatabase.addCarDatabase(carClass.getCarClass());
+			
+			List<Car> cars = carClass.getCars();
+			for(Car car : cars) {
+				System.out.println(String.format("%.2f", (float) (carCounter++*100) / totalCars) + "% - Loading car: " + car.getId());
+				
+				// ADD CAR
+				CarDatabase.addCarToDatabase(carClass.getCarClass(), car);
+			}
 		}
 	}
 	
@@ -92,11 +140,11 @@ public class Garage {
 		}
 	}
 	
-	private static void parseClass(List<Car> group, CarClasses carClass) throws Exception {
+	private static void parseClassFromFiles(List<Car> group, CarClasses carClass) throws Exception {
 		try(BufferedReader reader = Files.newBufferedReader(cardb.resolve(carClass.getFileName()), StandardCharsets.ISO_8859_1)) {	
 			String line = null;
 			while((line = reader.readLine()) != null) {
-				parseCar(group, line, carClass.getValue());
+				parseCarFromLine(group, line, carClass.getValue());
 			}
 		} catch (FileNotFoundException e) {
 			throw new Exception("'" + carClass.toString() + "' not found!");
@@ -107,7 +155,7 @@ public class Garage {
 		}
 	}
 	
-	private static void parseCar(List<Car> group, String rawLine, int classIndex) throws Exception {
+	private static void parseCarFromLine(List<Car> group, String rawLine, int classIndex) throws Exception {
 		String[] splittedLine = rawLine.split(",");
 		
 		if (splittedLine.length != 11)

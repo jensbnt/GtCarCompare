@@ -17,7 +17,7 @@ public class Car {
 	private int price;
 	private Boolean owned;
 	
-	Car(int id, String make, String name, double maxSpeed, double acceleration, double braking, double cornering, double stability, int bhp, int weight, int price, Boolean owned) {
+	public Car(int id, String make, String name, double maxSpeed, double acceleration, double braking, double cornering, double stability, int bhp, int weight, int price, Boolean owned) {
 		this.id = id;
 		this.make = make;
 		this.name = name;
@@ -120,6 +120,37 @@ public class Car {
 			return id + "";
 		default:
 			return "";
+		}
+	}
+	
+	public Object getStat(CarStats stat) {
+		switch (stat) {
+		case MAXSPEED:
+			return maxSpeed;
+		case ACCELERATION:
+			return acceleration;
+		case BRAKING:
+			return braking;
+		case CORNERING:
+			return cornering;
+		case STABILITY:
+			return stability;
+		case TOTAL_SCORE:
+			return getTotalScore();
+		case MAKE:
+			return make;
+		case NAME:
+			return name;
+		case POWER:
+			return bhp;
+		case WEIGHT:
+			return weight;
+		case PRICE:
+			return price;
+		case ID:
+			return id;
+		default:
+			return null;
 		}
 	}
 	

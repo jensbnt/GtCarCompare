@@ -31,7 +31,7 @@ public class ButtonListener implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
-		carTableModel.setRowCount(0);
+		carTableModel.clear();
 		
 		/* Get sort method */
 		CarStats selectedSortStat = CarStats.ID;

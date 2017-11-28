@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,7 @@ public class CarFrame extends JFrame {
 	/* Option Items */
 	private JCheckBox checkOwned;
 	private JCheckBox checkFocus;
+	private JCheckBox selectAll;
 	
 	/* Action Items */
 	private JButton buttonSort;
@@ -55,7 +58,7 @@ public class CarFrame extends JFrame {
 	private JScrollPane scrollPane;
 	
 	public CarFrame() {
-		super("GT Sport");
+		super("GT Sport" + (Garage.offlineModeActivated() ? " - Offline mode" : " - Online mode"));
 		initComponents();
 		initMenu();
 		layoutComponents();
@@ -102,13 +105,14 @@ public class CarFrame extends JFrame {
 		/* Init Option Items */
 		checkOwned = new JCheckBox("Only show owned cars");
 		checkFocus = new JCheckBox("Focus in filtered fields");
+		selectAll = new JCheckBox("Select all classes");
 		
 		/* Init Action Items */
 		buttonSort = new JButton("Sort Cars");
 		
 		/* Init Car Panel Items */
 		carTable = new JTable(new CarTableModel());
-		carTable.setAutoCreateRowSorter(true);
+		//carTable.setAutoCreateRowSorter(true);
 		carTable.getTableHeader().setReorderingAllowed(false);
 		scrollPane = new JScrollPane(carTable);
 		carTable.setFillsViewportHeight(true);
@@ -152,10 +156,11 @@ public class CarFrame extends JFrame {
 		optionPanel.setLayout(new GridLayout(2,0));
 		optionPanel.add(checkOwned);
 		optionPanel.add(checkFocus);
+		optionPanel.add(selectAll);
 		
 		/* Parent */
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
-		//topPanel.add(sortPanel);
+		topPanel.add(sortPanel);
 		topPanel.add(classPanel);
 		topPanel.add(optionPanel);
 		
@@ -171,5 +176,20 @@ public class CarFrame extends JFrame {
 	
 	private void initListeners() {
 		buttonSort.addActionListener(new ButtonListener((CarTableModel) carTable.getModel(), sortingRadioButtons, classCheckBoxes, checkOwned, checkFocus));
+	
+		selectAll.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (selectAll.isSelected()) {
+					for (ClassCheckBox check : classCheckBoxes) {
+						check.setSelected(true);
+					}
+				} else {
+					for (ClassCheckBox check : classCheckBoxes) {
+						check.setSelected(false);
+					}
+				}
+			}
+		});
 	}
 }
