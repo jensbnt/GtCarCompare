@@ -11,6 +11,7 @@ import java.util.List;
 import jensbnt.compareApp.Car;
 import jensbnt.util.CarClasses;
 import jensbnt.util.CarStats;
+import jensbnt.util.Logger;
 
 public class CarDatabase {
 
@@ -32,9 +33,9 @@ public class CarDatabase {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:" + dbms + "://" + serverName + "/" + dbName, userName, password);
 		} catch (ClassNotFoundException e) {
-			System.out.println("CarDatabase Error: " + e.getMessage());
+			Logger.addErrorLog("CarDatabase make connection: " + e.getMessage());
 		} catch (SQLException e) {
-			System.out.println("CarDatabase Error: " + e.getMessage());
+			Logger.addErrorLog("CarDatabase make connection: " + e.getMessage());
 		}
 	}
 	
@@ -44,7 +45,7 @@ public class CarDatabase {
 				conn.close();
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Logger.addErrorLog("CarDatabase brake connection: " + e.getMessage());
 		}
 	}
 	
@@ -58,12 +59,12 @@ public class CarDatabase {
 			stmt = conn.prepareStatement(prepareNewTableStatement(carClass));
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Logger.addErrorLog("CarDatabase add new car class: " + e.getMessage());
 		} finally {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				Logger.addErrorLog("CarDatabase removing statement: " + e.getMessage());
 			}
 		}
 	}
@@ -129,12 +130,12 @@ public class CarDatabase {
 			
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Logger.addErrorLog("CarDatabase add car: " + e.getMessage());
 		} finally {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				Logger.addErrorLog("CarDatabase removing statement: " + e.getMessage());
 			}
 		}
 	}
@@ -162,12 +163,12 @@ public class CarDatabase {
 				cars.add(new Car(id, make, name, maxSpeed, acceleration, braking, cornering, stability, bhp, weight, price, false));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Logger.addErrorLog("CarDatabase fetching car (" + carClass.getDatabaseName() + "): " + e.getMessage());
 		} finally {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				Logger.addErrorLog("CarDatabase removing statement: " + e.getMessage());
 			}
 		}
 		

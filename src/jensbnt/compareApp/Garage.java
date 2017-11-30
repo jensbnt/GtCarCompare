@@ -13,13 +13,14 @@ import java.util.List;
 
 import jensbnt.database.CarDatabase;
 import jensbnt.util.CarClasses;
+import jensbnt.util.Logger;
 
 public class Garage {
 
-	public static List<Integer> owned_cars;
-	public static List<CarClass> classes;
-	public static Path cardb = Paths.get("car_database");
-	public static Path owned_path = Paths.get(System.getProperty("user.home")).resolve("GTSport/owned_cars.txt");
+	private static List<Integer> owned_cars;
+	private static List<CarClass> classes;
+	private static Path cardb = Paths.get("car_database");
+	private static Path owned_path = Paths.get(System.getProperty("user.home")).resolve("GTSport/owned_cars.txt");
 	
 	private static Boolean offlineMode = false;
 	
@@ -29,41 +30,77 @@ public class Garage {
 		
 		/* Make owned car file */
 		if(!Files.exists(owned_path)) {
+			Logger.addLog("No 'owned_cars.txt' file, creating...");
 			try {
 				Files.createDirectories(owned_path.getParent());
 				Files.createFile(owned_path);
 			} catch (IOException e) {
 				throw new Exception("Error finding/creating owned_cars.txt");
 			}
+			Logger.addLog("Created 'owned_cars.txt' file");
 		}
 		
 		/* Load owned cars */
+		Logger.addLog("Loading owned cars");
 		loadOwnedCars();
+		Logger.addLog("Loading owned cars: done");
 		
 		/* Load cars */
 		classes = new ArrayList<>();
 		offlineMode = !CarDatabase.hasValidConnection();
 		
 		if (offlineMode) {	// Load from files
+			Logger.addLog("Loading cars in offline mode");
 			for(CarClasses carClass : CarClasses.values()) {
-				System.out.println("Parsing class " + carClass.toString() + " from files " + "(" + carClass.getValue() + "/" + CarClasses.values().length + ")");
+				Logger.addLog("Parsing class " + carClass.toString() + " from files " + "(" + carClass.getValue() + "/" + CarClasses.values().length + ")");
 				classes.add(new CarClass(carClass));
 				parseClassFromFiles(classes.get(classes.size() - 1).getCars(), carClass);
 			}
 		} else {	// Load from database
+			Logger.addLog("Loading cars in online mode");
 			for(CarClasses carClass : CarClasses.values()) {
-				System.out.println("Fetching class " + carClass.toString() + " from database " + "(" + carClass.getValue() + "/" + CarClasses.values().length + ")");
+				Logger.addLog("Fetching class " + carClass.toString() + " from database " + "(" + carClass.getValue() + "/" + CarClasses.values().length + ")");
 				List<Car> cars = CarDatabase.getCarsFromDatabase(carClass);
 				classes.add(new CarClass(carClass, cars));
 			}
+			
+			updateOwnedCars();
 		}
+		
+		Logger.addLog("Loading cars: done");
 		
 		CarDatabase.brakeConnection();
 	}
 	
+	/* CLASS FUNCTIONS */
+	
 	public static Boolean offlineModeActivated() {
 		return offlineMode;
 	}
+	
+	public static List<Car> getClass(CarClasses carClassEnum) {
+		for(CarClass carClass : classes) {
+			if (carClass.getCarClass() == carClassEnum) {
+				return carClass.getCars();
+			}
+		}
+		
+		return new ArrayList<Car>();
+	}
+	
+	public static int getValue() {
+		int totalValue = 0;
+		for(CarClass carClass : classes) {
+			for (Car car : carClass.getCars()) {
+				if (car.getOwned()) {
+					totalValue += car.getPrice();
+				}
+			}
+		}
+		return totalValue;
+	}
+	
+	/* ONLINE FUNCTIONS */
 	
 	@SuppressWarnings("unused")
 	private static void loadCarsToDatabase() { // DANGEROUS FUNCTION!!!
@@ -89,27 +126,7 @@ public class Garage {
 		}
 	}
 	
-	public static List<Car> getClass(CarClasses carClassEnum) {
-		for(CarClass carClass : classes) {
-			if (carClass.getCarClass() == carClassEnum) {
-				return carClass.getCars();
-			}
-		}
-		
-		return new ArrayList<Car>();
-	}
-	
-	public static int getValue() {
-		int totalValue = 0;
-		for(CarClass carClass : classes) {
-			for (Car car : carClass.getCars()) {
-				if (car.getOwned()) {
-					totalValue += car.getPrice();
-				}
-			}
-		}
-		return totalValue;
-	}
+	/* OFFLINE FUNCTIONS */
 	
 	private static void loadOwnedCars() throws Exception {
 		try(BufferedReader reader = Files.newBufferedReader(owned_path)) {
@@ -120,13 +137,13 @@ public class Garage {
 				owned_cars.add(Integer.parseInt(line));
 			}
 		} catch (FileNotFoundException e) {
-			throw new Exception("'owned_cars.txt' not found!");
+			throw new Exception("'owned_cars.txt' not found");
 		} catch (IOException e) {
 			throw new Exception("Error loading files from owned_cars.txt");
 		}
 	}
 	
-	public static void saveOwnedCars() {
+	public static void saveOwnedCars() throws Exception {
 		try(BufferedWriter writer = Files.newBufferedWriter(owned_path)) {
 			for(CarClass carClass : classes) {
 				for (Car car : carClass.getCars()) {
@@ -135,8 +152,26 @@ public class Garage {
 					}
 				}
 			}
+		} catch (FileNotFoundException e) {
+			throw new Exception("'owned_cars.txt' not found");
 		} catch (IOException e) {
-			System.out.println("Something went wrong writing the contacts!");
+			throw new Exception("Error saving files to owned_cars.txt");
+		}
+	}
+	
+	private static void updateOwnedCars() {
+		for(CarClass carClass : classes) {
+			for (Car car : carClass.getCars()) {
+				if (owned_cars.contains(car.getId())) {
+					if (!car.getOwned()) {
+						car.toggleOwned();
+					}
+				} else {
+					if (car.getOwned()) {
+						car.toggleOwned();
+					}
+				}
+			}
 		}
 	}
 	
@@ -147,10 +182,10 @@ public class Garage {
 				parseCarFromLine(group, line, carClass.getValue());
 			}
 		} catch (FileNotFoundException e) {
-			throw new Exception("'" + carClass.toString() + "' not found!");
+			throw new Exception("'" + carClass.toString() + "' not found");
 		} catch (IOException e) {
 			throw new Exception("Error loading class: " + carClass.toString());
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw new Exception("Error loading class: " + carClass.toString());
 		}
 	}

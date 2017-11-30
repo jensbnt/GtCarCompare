@@ -156,8 +156,7 @@ public class Car {
 	
 	@Override
 	public String toString() {
-		return String.format("%02d | %.2f - %.2f - %.2f - %.2f - %.2f | %d BHP - %d kg - Cr. %d | %s %s", id, maxSpeed, acceleration, braking, cornering, stability, bhp, weight, price, make, name);
-		//return id + "\t" + maxSpeed + " \t " + acceleration + " \t " + braking + " \t " + cornering + " \t " + stability + " \t " + bhp + "\t" + weight + " kg\t  Cr. " + price + "\t" + owned + "\t" + make + " - " + name;
+		return make + " " + name + "(ID:" + id + ")";
 	}
 
 }
