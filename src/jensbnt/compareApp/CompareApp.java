@@ -3,28 +3,46 @@ package jensbnt.compareApp;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import jensbnt.database.CarLoadException;
 import jensbnt.gui.CarFrame;
 import jensbnt.util.Logger;
 
 public class CompareApp {
 	
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		/* Make logger */
-		Logger logger = new Logger();
+		setupLogger();
 		
 		/* Make garage */
+		setupGarage();
+		
+		/* Make GUI */
+		setupGUI();
+		
+		/* Execute code on exit */
+		setupShutdownHook();
+	}
+	
+	private static void setupLogger() {
+		@SuppressWarnings("unused")
+		Logger logger = new Logger();
+	}
+	
+	private static void setupGarage() {
+		@SuppressWarnings("unused")
 		Garage garage = null;
+		
 		Logger.addLog("Loading garage");
 		try {
 			garage = new Garage();
-		} catch (Exception e) {
+		} catch (CarLoadException e) {
 			Logger.addErrorLog("Error loading garage: " + e.getMessage());
 			return;
 		}
 		Logger.addLog("Loading garage: done");
-		
-		/* Make GUI */
+	}
+	
+	private static void setupGUI() {
 		Logger.addLog("Loading GUI");
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -41,8 +59,9 @@ public class CompareApp {
 		
 		new CarFrame();
 		Logger.addLog("Loading GUI: done");
-		
-		/* Execute code on exit */
+	}
+	
+	private static void setupShutdownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 	        public void run() {
 	    		Logger.addLog("Saving Owned Cars");
@@ -54,6 +73,11 @@ public class CompareApp {
 				}
 	            
 	    		Logger.addLog("Saving Owned Cars: done");
+	    		
+	    		Logger.addLog("Breaking connection with database");
+	    		//AdminDatabase.brakeConnection();
+	    		Logger.addLog("Breaking connection with database: done");
+	    		
 	    		Logger.addLog("Saving Logs");
 	            Logger.saveLogs();
 	        }

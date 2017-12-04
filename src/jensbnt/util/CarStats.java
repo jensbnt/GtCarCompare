@@ -34,7 +34,7 @@ public enum CarStats {
 		return value;
 	}
 	
-	public String getDatbaseName() {
+	public String getDatabaseName() {
 		return databaseName;
 	}
 	
