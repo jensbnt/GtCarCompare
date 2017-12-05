@@ -19,16 +19,19 @@ public class OwnedCarDatabase {
 	private final static Path owned_path = Paths.get(System.getProperty("user.home")).resolve("GTSport/owned_cars.txt");
 	private List<Integer> owned_cars;
 	
-	public OwnedCarDatabase() throws CarLoadException {
+	public OwnedCarDatabase() {
 		/* Make owned car file */
-		createOwnedFile();
-		
-		/* Load owned cars */
-		loadOwnedCars();
+		try {
+			createOwnedFile();
+			loadOwnedCars();
+		} catch (CarLoadException e) {
+			Logger.addErrorLog(e.getMessage());
+			owned_cars = new ArrayList<>();
+		}
 	}
 	
 	public Boolean contains(Car car) {
-		return true;
+		return owned_cars.contains(car.getId());
 	}
 
 	private void createOwnedFile() throws CarLoadException {
@@ -59,15 +62,15 @@ public class OwnedCarDatabase {
 		}
 	}
 	
-	public void saveOwnedCars(CarClass carClass) {
+	public void saveOwnedCars(List <CarClass> classes) {
 		try(BufferedWriter writer = Files.newBufferedWriter(owned_path)) {
-			for (Car car : carClass.getCars()) {
-				if (car.getOwned()) {
-					writer.write(car.getId() + "\n");
+			for(CarClass carClass : classes) {
+				for (Car car : carClass.getCars()) {
+					if (car.getOwned()) {
+						writer.write(car.getId() + "\r\n");
+					}
 				}
 			}
-		} catch (FileNotFoundException e) {
-			Logger.addErrorLog("'owned_cars.txt' not found");
 		} catch (IOException e) {
 			Logger.addErrorLog("Error saving files to owned_cars.txt");
 		}

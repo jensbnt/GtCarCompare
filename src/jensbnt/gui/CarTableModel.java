@@ -1,4 +1,4 @@
-package jensbnt.util;
+package jensbnt.gui;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 import jensbnt.compareApp.Car;
+import jensbnt.util.CarStats;
 
 @SuppressWarnings("serial")
 public class CarTableModel extends DefaultTableModel {
@@ -49,12 +50,13 @@ public class CarTableModel extends DefaultTableModel {
     	case BRAKING:
     	case CORNERING:
     	case STABILITY:
+    		return car.getStat(stat);
     	case TOTAL_SCORE:
-    		return car.getStringByStat(stat);
+    		return String.format("%.1f", car.getTotalScore());
     	case WEIGHT:
-    		return car.getStringByStat(stat) + " kg";
+    		return car.getStat(stat) + " kg";
     	case POWER:
-    		return car.getStringByStat(stat) + " BHP";
+    		return car.getStat(stat) + " BHP";
     	case PRICE:
     		return "Cr. " + NumberFormat.getIntegerInstance().format(car.getPrice());
 		default:

@@ -1,5 +1,5 @@
-1,Aston Martin,V8 Vantage S 2015,7.9,3.9,1.9,1.9,5.1,429,0,180000
-2,Mercedes-Benz,A 45 AMG 4Matic 2013,7.0,5.5,1.6,1.4,5.1,355,0,64000
-3,BMW,M4 Coupe 2013,7.9,3.7,2.0,1.8,4.8,425,0,120000
-4,Toyota,S-FR Racing Concept 2016,6.4,3.6,1.8,1.9,5.4,349,0,80000
-5,Ford,Mustang GT Premium Fastback,6.7,3.1,1.9,1.7,4.6,434,0,44310
+Mercedes-Benz / A 45 AMG 4Matic 2013 / 7.0 / 6.0 / 2.0 / 1.7 / 5.1 / 355 / 0 / 64000
+Toyota / S-FR Racing Concept 2016 / 6.4 / 4.3 / 2.4 / 2.4 / 5.6 / 349 / 0 / 80000
+Aston Martin / V8 Vantage S 2015 / 7.9 / 4.0 / 2.0 / 1.9 / 5.1 / 429 / 0 / 180000
+BMW / M4 Coupe 2013 / 7.9 / 3.8 / 2.1 / 1.9 / 4.8 / 425 / 0 / 120000
+Ford / Mustang GT Premium Fastback / 6.7 / 3.2 / 2.1 / 1.8 / 4.6 / 434 / 0 / 44310

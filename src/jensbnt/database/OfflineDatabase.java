@@ -26,14 +26,15 @@ public class OfflineDatabase implements CarDatabase {
 		
 		try(BufferedReader reader = Files.newBufferedReader(cardb.resolve(carClass.getFileName()), StandardCharsets.ISO_8859_1)) {	
 			String line = null;
+			int counter = 1;
 			while((line = reader.readLine()) != null) {
-				Car newCar = parseCarFromLine(line, carClass.getValue());
+				Car newCar = parseCarFromLine(line, (carClass.getValue() * 1000) + (counter++));
 				cars.add(newCar);
 			}
 		} catch (FileNotFoundException e) {
 			throw new CarLoadException("'" + carClass.toString() + "' not found");
-		} catch (IOException e) {
-			throw new CarLoadException("Error loading class: " + carClass.toString());
+		} catch (IOException | CarLoadException e) {
+			throw new CarLoadException("Can't parse from " + carClass.getFileName());
 		}
 		
 		return cars;
@@ -41,23 +42,23 @@ public class OfflineDatabase implements CarDatabase {
 	
 	/* Helper functions */
 	
-	private static Car parseCarFromLine(String rawLine, int classIndex) throws CarLoadException {
-		String[] splittedLine = rawLine.split(",");
+	private static Car parseCarFromLine(String rawLine, int generatedId) throws CarLoadException {
+		String[] splittedLine = rawLine.split(" / ");
 		
-		if (splittedLine.length != 11)
+		if (splittedLine.length != 10)
 			throw new CarLoadException("Parsing error");
 		
-		int id = classIndex*1000 + Integer.parseInt(splittedLine[0]);
-		String make = splittedLine[1];
-		String name = splittedLine[2];
-		double maxSpeed = Double.parseDouble(splittedLine[3]);
-		double acceleration = Double.parseDouble(splittedLine[4]);
-		double braking = Double.parseDouble(splittedLine[5]);
-		double cornering = Double.parseDouble(splittedLine[6]);
-		double stability = Double.parseDouble(splittedLine[7]);
-		int bhp = Integer.parseInt(splittedLine[8]);
-		int weight = Integer.parseInt(splittedLine[9]);
-		int price = Integer.parseInt(splittedLine[10]);
+		int id = generatedId;
+		String make = splittedLine[0];
+		String name = splittedLine[1];
+		double maxSpeed = Double.parseDouble(splittedLine[2]);
+		double acceleration = Double.parseDouble(splittedLine[3]);
+		double braking = Double.parseDouble(splittedLine[4]);
+		double cornering = Double.parseDouble(splittedLine[5]);
+		double stability = Double.parseDouble(splittedLine[6]);
+		int bhp = Integer.parseInt(splittedLine[7]);
+		int weight = Integer.parseInt(splittedLine[8]);
+		int price = Integer.parseInt(splittedLine[9]);
 		
 		Boolean owned = false;
 		

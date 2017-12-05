@@ -3,7 +3,6 @@ package jensbnt.compareApp;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import jensbnt.database.CarLoadException;
 import jensbnt.gui.CarFrame;
 import jensbnt.util.Logger;
 
@@ -33,12 +32,7 @@ public class CompareApp {
 		Garage garage = null;
 		
 		Logger.addLog("Loading garage");
-		try {
-			garage = new Garage();
-		} catch (CarLoadException e) {
-			Logger.addErrorLog("Error loading garage: " + e.getMessage());
-			return;
-		}
+		garage = new Garage();
 		Logger.addLog("Loading garage: done");
 	}
 	
@@ -65,13 +59,7 @@ public class CompareApp {
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 	        public void run() {
 	    		Logger.addLog("Saving Owned Cars");
-	    		
-	            try {
-					Garage.saveOwnedCars();
-				} catch (Exception e) {
-					Logger.addErrorLog("Error saving owned cars" + e.getMessage());
-				}
-	            
+	    		Garage.saveOwnedCars();
 	    		Logger.addLog("Saving Owned Cars: done");
 	    		
 	    		Logger.addLog("Breaking connection with database");

@@ -37,7 +37,6 @@ import jensbnt.compareApp.Garage;
 import jensbnt.database.AdminDatabase;
 import jensbnt.util.CarClasses;
 import jensbnt.util.CarStats;
-import jensbnt.util.CarTableModel;
 
 @SuppressWarnings("serial")
 public class CarFrame extends JFrame {
@@ -115,8 +114,13 @@ public class CarFrame extends JFrame {
 		/* Initialize Class Items */
 		classCheckBoxes = new ArrayList<>();
 		
-		for(CarClasses carClass : CarClasses.values()) {
-			classCheckBoxes.add(new ClassCheckBox(carClass));
+		for(CarClasses carClass : CarClasses.values()) {	
+			if (Garage.isLoaded(carClass)) {
+				classCheckBoxes.add(new ClassCheckBox(carClass));
+			} else {
+				classCheckBoxes.add(new ClassCheckBox(carClass));
+				classCheckBoxes.get(classCheckBoxes.size() - 1).setEnabled(false);
+			}
 		}
 		
 		/* Initialize Option Items */
@@ -284,7 +288,7 @@ public class CarFrame extends JFrame {
 		});
 		
 		/* Initialize Action Listeners */
-		buttonSort.addActionListener(new ButtonListener((CarTableModel) carTable.getModel(), sortingRadioButtons, classCheckBoxes, checkOwned, checkFocus));
+		buttonSort.addActionListener(new SortButtonListener((CarTableModel) carTable.getModel(), sortingRadioButtons, classCheckBoxes, checkOwned, checkFocus));
 
 		/* Initialize Car Option Listeners */
 		buttonToggleOwn.addActionListener(new ActionListener(){
@@ -341,8 +345,8 @@ public class CarFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				adminPanel.setVisible(false);
-				AdminDatabase.removeAcces();
+				/*adminPanel.setVisible(false);
+				AdminDatabase.removeAcces();*/
 			}
 			
 		});

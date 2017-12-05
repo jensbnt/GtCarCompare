@@ -15,16 +15,21 @@ import jensbnt.util.Logger;
 
 public class OnlineDatabase implements CarDatabase {
 
-	protected final static String dbms = "mysql";
-	protected final static String serverName = "sql11.freesqldatabase.com";
-	protected final static String userName = "sql11207639";
-	protected final static String password = "3b9RQuniYk";
-	protected final static String dbName = "sql11207639";
-	//private final static String portNumber = "3306";
+	protected String dbms;
+	protected String serverName;
+	protected String userName;
+	protected String password;
+	protected String dbName;
 	
 	protected Connection conn = null;
 	
-	public OnlineDatabase() {
+	public OnlineDatabase(String dbms, String serverName, String userName, String password, String dbName) {
+		this.dbms = dbms;
+		this.serverName = serverName;
+		this.userName = userName;
+		this.password = password;
+		this.dbName = dbName;
+		
 		makeConnection();
 	}
 	

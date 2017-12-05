@@ -20,14 +20,24 @@ public class Garage {
 	private static OnlineDatabase onlineDb;
 	private static Boolean offlineMode = false;
 	
-	Garage() throws CarLoadException {
+	/* Online database */
+	private static final String dbms = "mysql";
+	private static final String serverName = "sql11.freesqldatabase.com";
+	private static final String userName = "sql11207639";
+	private static final String password = "3b9RQuniYk";
+	private static final String dbName = "sql11207639";
+	
+	Garage() {
 		/* Set up databases */
 		Logger.addLog("Setting up new databases");
 		ownedDb = new OwnedCarDatabase();
 		offlineDb = new OfflineDatabase();
-		onlineDb = new OnlineDatabase();
+		onlineDb = new OnlineDatabase(dbms, serverName, userName, password, dbName);
 		offlineMode = !onlineDb.hasValidConnection();
 		Logger.addLog("Setting up new databases: done");
+		
+		/* TEMP: START IN OFFLINE MODE */
+		//offlineMode = true;
 		
 		/* Load cars */
 		Logger.addLog("Loading cars");
@@ -56,6 +66,16 @@ public class Garage {
 		return new ArrayList<Car>();
 	}
 	
+	public static Boolean isLoaded(CarClasses carClassEnum) {
+		for(CarClass carClass : classes) {
+			if (carClass.getCarClass() == carClassEnum) {
+				return carClass.isLoaded();
+			}
+		}
+		
+		return false;
+	}
+	
 	public static int getValue() {
 		int totalValue = 0;
 		for(CarClass carClass : classes) {
@@ -70,7 +90,7 @@ public class Garage {
 	
 	/* LOADING FUNCTIONS */
 	
-	private static void loadCars() throws CarLoadException {
+	private static void loadCars() {
 		classes = new ArrayList<>();
 		CarDatabase db;
 		
@@ -84,8 +104,15 @@ public class Garage {
 		
 		for(CarClasses carClass : CarClasses.values()) {
 			Logger.addLog("Fetching class " + carClass.toString() + " from database " + "(" + carClass.getValue() + "/" + CarClasses.values().length + ")");
-			List<Car> cars = db.getCars(carClass);
-			classes.add(new CarClass(carClass, cars));
+			
+			List<Car> cars = null;
+			try {
+				cars = db.getCars(carClass);
+				classes.add(new CarClass(carClass, cars, true));
+			} catch (CarLoadException e) {
+				Logger.addErrorLog(e.getMessage());
+				classes.add(new CarClass(carClass, new ArrayList<>(), false));
+			}
 		}
 	}
 	
@@ -93,23 +120,17 @@ public class Garage {
 	
 	private static void updateOwnedCars() {
 		for(CarClass carClass : classes) {
-			for (Car car : carClass.getCars()) {
-				if (ownedDb.contains(car)) {
-					if (!car.getOwned()) {
+			if (carClass.isLoaded()) {
+				for (Car car : carClass.getCars()) {
+					if (car.getOwned() != ownedDb.contains(car)) {
 						car.toggleOwned();
-					}
-				} else {
-					if (car.getOwned()) {
-						car.toggleOwned();
-					}
+					} 
 				}
 			}
 		}
 	}
 	
 	public static void saveOwnedCars() {
-		for(CarClass carClass : classes) {
-			ownedDb.saveOwnedCars(carClass);
-		}
+		ownedDb.saveOwnedCars(classes);
 	}
 }

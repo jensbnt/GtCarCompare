@@ -12,9 +12,8 @@ import jensbnt.util.CarClasses;
 import jensbnt.util.CarComparator;
 import jensbnt.util.CarSort;
 import jensbnt.util.CarStats;
-import jensbnt.util.CarTableModel;
 
-public class ButtonListener implements ActionListener {
+public class SortButtonListener implements ActionListener {
 
 	private CarTableModel carTableModel;
 	private List<StatRadioButton> sortingRadioButtons;
@@ -22,7 +21,7 @@ public class ButtonListener implements ActionListener {
 	private JCheckBox checkOwned;
 	private JCheckBox checkFocus;
 	
-	public ButtonListener(CarTableModel carTableModel, List<StatRadioButton> sortingRadioButtons, List<ClassCheckBox> classCheckBoxes, JCheckBox checkOwned, JCheckBox checkFocus) {
+	public SortButtonListener(CarTableModel carTableModel, List<StatRadioButton> sortingRadioButtons, List<ClassCheckBox> classCheckBoxes, JCheckBox checkOwned, JCheckBox checkFocus) {
 		this.carTableModel = carTableModel;
 		this.sortingRadioButtons = sortingRadioButtons;
 		this.classCheckBoxes = classCheckBoxes;
