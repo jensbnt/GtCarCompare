@@ -11,7 +11,6 @@ import java.util.List;
 import jensbnt.compareApp.Car;
 import jensbnt.util.CarClasses;
 import jensbnt.util.CarStats;
-import jensbnt.util.Logger;
 
 public class OnlineDatabase implements CarDatabase {
 
@@ -29,44 +28,14 @@ public class OnlineDatabase implements CarDatabase {
 		this.userName = userName;
 		this.password = password;
 		this.dbName = dbName;
-		
-		makeConnection();
-	}
-	
-	/* Connection */
-	
-	private void makeConnection() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:" + dbms + "://" + serverName + "/" + dbName, userName, password);
-		} catch (ClassNotFoundException e) {
-			Logger.addErrorLog("CarDatabase make connection: " + e.getMessage());
-			conn = null;
-		} catch (SQLException e) {
-			Logger.addErrorLog("CarDatabase make connection: " + e.getMessage());
-			conn = null;
-		}
-	}
-	
-	public void brakeConnection() {
-		try {
-			if (conn != null) {
-				conn.close();
-			}
-		} catch (SQLException e) {
-			Logger.addErrorLog("CarDatabase brake connection: " + e.getMessage());
-			conn = null;
-		}
-	}
-	
-	public Boolean hasValidConnection() {
-		return conn != null;
 	}
 	
 	/* Database */
 	
 	@Override
-	public List<Car> getCars(CarClasses carClass) throws CarLoadException{
+	public List<Car> getCars(CarClasses carClass) throws CarLoadException {
+		makeConnection();
+		
 		PreparedStatement stmt = null;
 		List<Car> cars = new ArrayList<>();
 		try {
@@ -98,6 +67,31 @@ public class OnlineDatabase implements CarDatabase {
 			}
 		}
 		
+		brakeConnection();
+		
 		return cars;
+	}
+	
+	/* Connection */
+	
+	private void makeConnection() throws CarLoadException {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:" + dbms + "://" + serverName + "/" + dbName, userName, password);
+		} catch (ClassNotFoundException e) {
+			throw new CarLoadException("CarDatabase make connection: " + e.getMessage());
+		} catch (SQLException e) {
+			throw new CarLoadException("CarDatabase make connection: " + e.getMessage());
+		}
+	}
+	
+	private void brakeConnection() throws CarLoadException {
+		try {
+			if (conn != null) {
+				conn.close();
+			}
+		} catch (SQLException e) {
+			throw new CarLoadException("CarDatabase brake connection: " + e.getMessage());
+		}
 	}
 }

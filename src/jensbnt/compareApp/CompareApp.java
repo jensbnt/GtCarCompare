@@ -62,10 +62,6 @@ public class CompareApp {
 	    		Garage.saveOwnedCars();
 	    		Logger.addLog("Saving Owned Cars: done");
 	    		
-	    		Logger.addLog("Breaking connection with database");
-	    		//AdminDatabase.brakeConnection();
-	    		Logger.addLog("Breaking connection with database: done");
-	    		
 	    		Logger.addLog("Saving Logs");
 	            Logger.saveLogs();
 	        }

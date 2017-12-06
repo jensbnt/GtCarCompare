@@ -1,9 +1,13 @@
 package jensbnt.compareApp;
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import jensbnt.database.CarDatabase;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
+
 import jensbnt.database.CarLoadException;
 import jensbnt.database.OfflineDatabase;
 import jensbnt.database.OnlineDatabase;
@@ -18,7 +22,6 @@ public class Garage {
 	private static OwnedCarDatabase ownedDb;
 	private static OfflineDatabase offlineDb;
 	private static OnlineDatabase onlineDb;
-	private static Boolean offlineMode = false;
 	
 	/* Online database */
 	private static final String dbms = "mysql";
@@ -33,11 +36,7 @@ public class Garage {
 		ownedDb = new OwnedCarDatabase();
 		offlineDb = new OfflineDatabase();
 		onlineDb = new OnlineDatabase(dbms, serverName, userName, password, dbName);
-		offlineMode = !onlineDb.hasValidConnection();
 		Logger.addLog("Setting up new databases: done");
-		
-		/* TEMP: START IN OFFLINE MODE */
-		//offlineMode = true;
 		
 		/* Load cars */
 		Logger.addLog("Loading cars");
@@ -51,10 +50,6 @@ public class Garage {
 	}
 	
 	/* CLASS FUNCTIONS */
-	
-	public static Boolean offlineModeActivated() {
-		return offlineMode;
-	}
 	
 	public static List<Car> getClass(CarClasses carClassEnum) {
 		for(CarClass carClass : classes) {
@@ -92,28 +87,47 @@ public class Garage {
 	
 	private static void loadCars() {
 		classes = new ArrayList<>();
-		CarDatabase db;
 		
-		if (offlineMode) {
-			Logger.addLog("Loading cars in offline mode");
-			db = offlineDb;
-		} else {
-			Logger.addLog("Loading cars in online mode");
-			db = onlineDb;
-		}
+		final JDialog dlg = new JDialog(javax.swing.FocusManager.getCurrentManager().getActiveWindow(), "Loading cars");
+	    JProgressBar dpb = new JProgressBar(0, CarClasses.values().length);
+	    JLabel label = new JLabel("Progress...");
+	    dpb.setValue(0);
+	    dpb.setStringPainted(true);
+	    dlg.add(BorderLayout.CENTER, dpb);
+	    dlg.add(BorderLayout.NORTH, label);
+	    dlg.setSize(300, 100);
+	    dlg.setLocationRelativeTo(null);
+	    dlg.setVisible(true);
 		
 		for(CarClasses carClass : CarClasses.values()) {
 			Logger.addLog("Fetching class " + carClass.toString() + " from database " + "(" + carClass.getValue() + "/" + CarClasses.values().length + ")");
+			label.setText("Loading class: " + carClass.toString() + " ...");
+			dpb.setValue(carClass.getValue());
 			
-			List<Car> cars = null;
-			try {
-				cars = db.getCars(carClass);
-				classes.add(new CarClass(carClass, cars, true));
+			try {	// TRY TO LOAD ONLINE
+				classes.add(new CarClass(carClass, onlineLoad(carClass), true));
 			} catch (CarLoadException e) {
-				Logger.addErrorLog(e.getMessage());
-				classes.add(new CarClass(carClass, new ArrayList<>(), false));
+				Logger.addErrorLog("Online load fail: " + e.getMessage());
+				try {	// TRY TO LOAD OFFLINE
+					classes.add(new CarClass(carClass, offlineLoad(carClass), true));
+				} catch (CarLoadException e1) {	// LOADING FAILED
+					Logger.addErrorLog(e1.getMessage());
+					classes.add(new CarClass(carClass, new ArrayList<>(), false));
+				}
 			}
 		}
+		
+		dlg.setVisible(false);
+	}
+	
+	private static List<Car> offlineLoad(CarClasses carClass) throws CarLoadException {
+		List<Car> cars = offlineDb.getCars(carClass);
+		return cars;
+	}
+	
+	private static List<Car> onlineLoad(CarClasses carClass) throws CarLoadException {
+		List<Car> cars = onlineDb.getCars(carClass);
+		return cars;
 	}
 	
 	/* OWNING FUNCTIONS */

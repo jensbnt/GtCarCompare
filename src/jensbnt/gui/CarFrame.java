@@ -81,7 +81,7 @@ public class CarFrame extends JFrame {
 	private JButton adminDeactivate;
 	
 	public CarFrame() {
-		super("GT Sport" + (Garage.offlineModeActivated() ? " - Offline mode" : " - Online mode"));
+		super("GT Sport");
 		initComponents();
 		initMenu();
 		layoutComponents();
@@ -97,6 +97,7 @@ public class CarFrame extends JFrame {
 		menu1_tools = new JMenu("Tools");
 		item1_1_value = new JMenuItem("Calculate garage value");
 		item1_2_admin = new JMenuItem("Admin menu");
+		item1_2_admin.setVisible(false);
 		
 		/* Initialize Sorting Items */
 		sortingRadioButtons = new ArrayList<>();
@@ -225,6 +226,7 @@ public class CarFrame extends JFrame {
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new FlowLayout());
 		bottomPanel.add(buttonSort);
+	    
 		add(bottomPanel, BorderLayout.PAGE_END);
 	}
 	
