@@ -25,6 +25,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -67,6 +68,7 @@ public class CarFrame extends JFrame {
 	
 	/* Action Items */
 	private JButton buttonSort;
+	private JProgressBar progressBar;
 	
 	/* Car Panel Items */
 	private JTable carTable;
@@ -115,13 +117,9 @@ public class CarFrame extends JFrame {
 		/* Initialize Class Items */
 		classCheckBoxes = new ArrayList<>();
 		
-		for(CarClasses carClass : CarClasses.values()) {	
-			if (Garage.isLoaded(carClass)) {
-				classCheckBoxes.add(new ClassCheckBox(carClass));
-			} else {
-				classCheckBoxes.add(new ClassCheckBox(carClass));
-				classCheckBoxes.get(classCheckBoxes.size() - 1).setEnabled(false);
-			}
+		for(CarClasses carClass : CarClasses.values()) {
+			classCheckBoxes.add(new ClassCheckBox(carClass));
+			classCheckBoxes.get(carClass.getValue()).setEnabled(false);
 		}
 		
 		/* Initialize Option Items */
@@ -135,6 +133,8 @@ public class CarFrame extends JFrame {
 		
 		/* Initialize Action Items */
 		buttonSort = new JButton("Sort Cars");
+		progressBar = new JProgressBar();
+		progressBar.setStringPainted(true);
 		
 		/* Initialize Car Panel Items */
 		carTable = new JTable(new CarTableModel());
@@ -226,6 +226,7 @@ public class CarFrame extends JFrame {
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new FlowLayout());
 		bottomPanel.add(buttonSort);
+		bottomPanel.add(progressBar);
 	    
 		add(bottomPanel, BorderLayout.PAGE_END);
 	}
@@ -375,5 +376,44 @@ public class CarFrame extends JFrame {
 				}
 			}
 		});
+		
+		/* Initialize Garage Listeners */
+		
+		class GarageUpdater implements GarageUpdateListener {
+
+			@Override
+			public void updateValueChanged(int percentage) {
+				progressBar.setValue(percentage);
+				
+			}
+
+			@Override
+			public void newUpdate(Boolean b) {
+				if (b) { /* Disable functions */
+					buttonSort.setVisible(false);
+					progressBar.setVisible(true);
+					progressBar.setValue(0);
+					
+					for(CarClasses carClass : CarClasses.values()) {
+						classCheckBoxes.get(carClass.getValue()).setEnabled(false);
+					}
+				} else { /* Enable functions */
+					buttonSort.setVisible(true);
+					progressBar.setVisible(false);
+					
+					for(CarClasses carClass : CarClasses.values()) {
+						if (Garage.isLoaded(carClass)) {
+							classCheckBoxes.get(carClass.getValue()).setEnabled(true);
+						} else {
+							classCheckBoxes.get(carClass.getValue()).setEnabled(false);
+						}
+					}
+				}
+				
+			}
+			
+		}
+		
+		Garage.addListener(new GarageUpdater());
 	}
 }

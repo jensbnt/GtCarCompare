@@ -12,11 +12,11 @@ public class CompareApp {
 		/* Make logger */
 		setupLogger();
 		
-		/* Make garage */
-		setupGarage();
-		
 		/* Make GUI */
 		setupGUI();
+		
+		/* Make garage */
+		setupGarage();
 		
 		/* Execute code on exit */
 		setupShutdownHook();

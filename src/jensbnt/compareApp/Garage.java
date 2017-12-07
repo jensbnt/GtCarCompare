@@ -1,23 +1,21 @@
 package jensbnt.compareApp;
 
-import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JProgressBar;
 
 import jensbnt.database.CarLoadException;
 import jensbnt.database.OfflineDatabase;
 import jensbnt.database.OnlineDatabase;
 import jensbnt.database.OwnedCarDatabase;
+import jensbnt.gui.GarageUpdateListener;
 import jensbnt.util.CarClasses;
 import jensbnt.util.Logger;
 
 public class Garage {
 
 	private static List<CarClass> classes;
+	
+	private static List<GarageUpdateListener> listeners = new ArrayList<>();
 	
 	private static OwnedCarDatabase ownedDb;
 	private static OfflineDatabase offlineDb;
@@ -82,27 +80,26 @@ public class Garage {
 		}
 		return totalValue;
 	}
+
+	public static void addListener(GarageUpdateListener toAdd) {
+	    listeners.add(toAdd);
+	}
 	
 	/* LOADING FUNCTIONS */
 	
 	private static void loadCars() {
 		classes = new ArrayList<>();
 		
-		final JDialog dlg = new JDialog(javax.swing.FocusManager.getCurrentManager().getActiveWindow(), "Loading cars");
-	    JProgressBar dpb = new JProgressBar(0, CarClasses.values().length);
-	    JLabel label = new JLabel("Progress...");
-	    dpb.setValue(0);
-	    dpb.setStringPainted(true);
-	    dlg.add(BorderLayout.CENTER, dpb);
-	    dlg.add(BorderLayout.NORTH, label);
-	    dlg.setSize(300, 100);
-	    dlg.setLocationRelativeTo(null);
-	    dlg.setVisible(true);
+		for(GarageUpdateListener listener : listeners) {
+			listener.newUpdate(true);
+		}
 		
 		for(CarClasses carClass : CarClasses.values()) {
 			Logger.addLog("Fetching class " + carClass.toString() + " from database " + "(" + carClass.getValue() + "/" + CarClasses.values().length + ")");
-			label.setText("Loading class: " + carClass.toString() + " ...");
-			dpb.setValue(carClass.getValue());
+			
+			for(GarageUpdateListener listener : listeners) {
+				listener.updateValueChanged((carClass.getValue()*100)/CarClasses.values().length);
+			}
 			
 			try {	// TRY TO LOAD ONLINE
 				classes.add(new CarClass(carClass, onlineLoad(carClass), true));
@@ -117,7 +114,9 @@ public class Garage {
 			}
 		}
 		
-		dlg.setVisible(false);
+		for(GarageUpdateListener listener : listeners) {
+			listener.newUpdate(false);
+		}
 	}
 	
 	private static List<Car> offlineLoad(CarClasses carClass) throws CarLoadException {
