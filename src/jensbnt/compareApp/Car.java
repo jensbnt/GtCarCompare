@@ -15,9 +15,9 @@ public class Car {
 	private int bhp;
 	private int weight;
 	private int price;
-	private Boolean owned;
+	private int owned;
 	
-	public Car(int id, String make, String name, double maxSpeed, double acceleration, double braking, double cornering, double stability, int bhp, int weight, int price, Boolean owned) {
+	public Car(int id, String make, String name, double maxSpeed, double acceleration, double braking, double cornering, double stability, int bhp, int weight, int price, int owned) {
 		this.id = id;
 		this.make = make;
 		this.name = name;
@@ -80,16 +80,12 @@ public class Car {
 		return price;
 	}
 	
-	public Boolean getOwned() {
+	public int getOwned() {
 		return owned;
 	}
 	
-	public void toggleOwned() {
-		if (owned) {
-			owned = false;
-		} else {
-			owned = true;
-		}
+	public void setOwned(int value) {
+		owned = value;
 	}
 	
 	public Object getStat(CarStats stat) {
@@ -118,6 +114,8 @@ public class Car {
 			return price;
 		case ID:
 			return id;
+		case OWNED:
+			return owned;
 		default:
 			return null;
 		}

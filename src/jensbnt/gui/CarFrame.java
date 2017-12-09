@@ -1,7 +1,6 @@
 package jensbnt.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -27,9 +26,12 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -64,7 +66,7 @@ public class CarFrame extends JFrame {
 	private JCheckBox selectAll;
 	
 	/* Car Option Items */
-	private JButton buttonToggleOwn;
+	private JSlider editOwn;
 	
 	/* Action Items */
 	private JButton buttonSort;
@@ -128,8 +130,11 @@ public class CarFrame extends JFrame {
 		selectAll = new JCheckBox("Select all classes");
 		
 		/* Initialize Car Option Items */
-		buttonToggleOwn = new JButton("Toggle selected car's ownership");
-		buttonToggleOwn.setEnabled(false);
+		editOwn = new JSlider(JSlider.HORIZONTAL, 0, 10, 0);
+		editOwn.setMajorTickSpacing(1);
+		editOwn.setPaintLabels(true);
+		//editOwn.setPaintTicks(true);
+		editOwn.setEnabled(false);
 		
 		/* Initialize Action Items */
 		buttonSort = new JButton("Sort Cars");
@@ -196,9 +201,9 @@ public class CarFrame extends JFrame {
 		
 		/* Car Option */
 		JPanel carOptionPanel = new JPanel();
-		carOptionPanel.setBorder(BorderFactory.createTitledBorder("Car Selection Options"));
+		carOptionPanel.setBorder(BorderFactory.createTitledBorder("Number of owned cars"));
 		carOptionPanel.setLayout(new GridLayout(BUTTON_ROW_HEIGHT, 0));
-		carOptionPanel.add(buttonToggleOwn);
+		carOptionPanel.add(editOwn);
 		
 		/* Admin */
 		adminPanel = new JPanel();
@@ -294,22 +299,17 @@ public class CarFrame extends JFrame {
 		buttonSort.addActionListener(new SortButtonListener((CarTableModel) carTable.getModel(), sortingRadioButtons, classCheckBoxes, checkOwned, checkFocus));
 
 		/* Initialize Car Option Listeners */
-		buttonToggleOwn.addActionListener(new ActionListener(){
+		editOwn.addChangeListener(new ChangeListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void stateChanged(ChangeEvent arg0) {
 				CarTableModel model = (CarTableModel) carTable.getModel();
 				Car car = model.getCarAt(carTable.getSelectedRow());
 				
-				car.toggleOwned();
-				
-				if (car.getOwned()) {
-					buttonToggleOwn.setBackground(Color.GREEN);
-				} else {
-					buttonToggleOwn.setBackground(Color.RED);
-				}
+				car.setOwned((int) editOwn.getValue());
+				model.fireTableRowsUpdated(carTable.getSelectedRow(), carTable.getSelectedRow()+1);
 			}
-			
+
 		});
 		
 		/* Initialize Admin Listeners */
@@ -359,19 +359,15 @@ public class CarFrame extends JFrame {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if(carTable.getSelectedRow() != -1) {
-					buttonToggleOwn.setEnabled(true);
+					editOwn.setEnabled(true);
 					adminEditCar.setEnabled(true);
 					
 					CarTableModel model = (CarTableModel) carTable.getModel();
 					Car car = model.getCarAt(carTable.getSelectedRow());
 					
-					if (car.getOwned()) {
-						buttonToggleOwn.setBackground(Color.GREEN);
-					} else {
-						buttonToggleOwn.setBackground(Color.RED);
-					}
+					editOwn.setValue(car.getOwned());
 				} else {
-					buttonToggleOwn.setEnabled(false);
+					editOwn.setEnabled(false);
 					adminEditCar.setEnabled(false);
 				}
 			}

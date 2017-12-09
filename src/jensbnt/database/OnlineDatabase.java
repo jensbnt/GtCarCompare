@@ -55,7 +55,7 @@ public class OnlineDatabase implements CarDatabase {
 				int weight = rs.getInt(CarStats.WEIGHT.getDatabaseName());
 				int price = rs.getInt(CarStats.PRICE.getDatabaseName());
 				
-				cars.add(new Car(id, make, name, maxSpeed, acceleration, braking, cornering, stability, bhp, weight, price, false));
+				cars.add(new Car(id, make, name, maxSpeed, acceleration, braking, cornering, stability, bhp, weight, price, 0));
 			}
 		} catch (SQLException e) {
 			throw new CarLoadException("CarDatabase fetching car (" + carClass.getDatabaseName() + "): " + e.getMessage());

@@ -19,7 +19,7 @@ public class CarSort {
 		}
 		
 		/* return master group */
-		Stream<Car> carStream = master.stream().sorted(compare).filter(car -> !filterOwned || car.getOwned());//.limit(15);
+		Stream<Car> carStream = master.stream().sorted(compare);//.filter(car -> !filterOwned || car.getOwned());
 		
 		return carStream.toArray(Car[]::new);
 	}

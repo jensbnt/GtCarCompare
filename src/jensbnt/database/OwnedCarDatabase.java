@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jensbnt.compareApp.Car;
 import jensbnt.compareApp.CarClass;
@@ -17,7 +18,7 @@ import jensbnt.util.Logger;
 public class OwnedCarDatabase {
 
 	private final static Path owned_path = Paths.get(System.getProperty("user.home")).resolve("GTSport/owned_cars.txt");
-	private List<Integer> owned_cars;
+	private Map<Integer, Integer> owned_cars;
 	
 	public OwnedCarDatabase() {
 		/* Make owned car file */
@@ -26,12 +27,18 @@ public class OwnedCarDatabase {
 			loadOwnedCars();
 		} catch (CarLoadException e) {
 			Logger.addErrorLog(e.getMessage());
-			owned_cars = new ArrayList<>();
+			owned_cars = new HashMap<>();
 		}
 	}
 	
-	public Boolean contains(Car car) {
-		return owned_cars.contains(car.getId());
+	public int contains(Car car) {
+		Integer owned = owned_cars.get(car.getId());
+		
+		if (owned == null) {
+			return 0;
+		} else {
+			return owned;
+		}
 	}
 
 	private void createOwnedFile() throws CarLoadException {
@@ -49,11 +56,17 @@ public class OwnedCarDatabase {
 	
 	private void loadOwnedCars() throws CarLoadException {
 		try(BufferedReader reader = Files.newBufferedReader(owned_path)) {
-			owned_cars = new ArrayList<>();
+			owned_cars = new HashMap<>();
 			
 			String line = null;
 			while((line = reader.readLine()) != null) {
-				owned_cars.add(Integer.parseInt(line));
+				String[] splitted = line.split(":");
+				
+				if (splitted.length != 2) {
+					throw new CarLoadException("Parsing eror");
+				}
+				
+				owned_cars.put(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
 			}
 		} catch (FileNotFoundException e) {
 			throw new CarLoadException("'owned_cars.txt' not found");
@@ -66,8 +79,8 @@ public class OwnedCarDatabase {
 		try(BufferedWriter writer = Files.newBufferedWriter(owned_path)) {
 			for(CarClass carClass : classes) {
 				for (Car car : carClass.getCars()) {
-					if (car.getOwned()) {
-						writer.write(car.getId() + "\r\n");
+					if (car.getOwned() > 0) {
+						writer.write(car.getId() + ":" + car.getOwned() + "\r\n");
 					}
 				}
 			}

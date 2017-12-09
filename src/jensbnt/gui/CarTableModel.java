@@ -59,6 +59,8 @@ public class CarTableModel extends DefaultTableModel {
     		return car.getStat(stat) + " BHP";
     	case PRICE:
     		return "Cr. " + NumberFormat.getIntegerInstance().format(car.getPrice());
+    	case OWNED:
+    		return car.getStat(stat);
 		default:
 			return null;	
     	}

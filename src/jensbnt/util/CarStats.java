@@ -12,7 +12,8 @@ public enum CarStats {
 	TOTAL_SCORE(8, "Total Score", "TOTAL_SCORE", "double"),
 	POWER(9, "Power", "POWER", "int"),
 	WEIGHT(10, "Weight", "WEIGHT", "int"),
-	PRICE(11, "Price", "PRICE", "int");
+	PRICE(11, "Price", "PRICE", "int"),
+	OWNED(12, "Owned", "OWNED", "int");
 
 	private final int value;
 	private final String name;

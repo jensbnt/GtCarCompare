@@ -18,7 +18,7 @@ public class CarComparator {
 	public static final Comparator<Car> byBhp = (c1, c2) -> Integer.compare(c2.getBhp(), c1.getBhp());
 	public static final Comparator<Car> byWeight = (c1, c2) -> Integer.compare(c1.getWeight(), c2.getWeight());
 	public static final Comparator<Car> byPrice = (c1, c2) -> Integer.compare(c2.getPrice(), c1.getPrice());
-	public static final Comparator<Car> byOwned = (c1, c2) -> Boolean.compare(c2.getOwned(), c1.getOwned());
+	public static final Comparator<Car> byOwned = (c1, c2) -> Integer.compare(c2.getOwned(), c1.getOwned());
 
 	public static Comparator<Car> getComparatorByStat(CarStats stat) {
 		switch (stat) {
@@ -46,6 +46,8 @@ public class CarComparator {
 			return byPrice;
 		case ID:
 			return byId;
+		case OWNED:
+			return byOwned;
 		default:
 			return byId;
 		}

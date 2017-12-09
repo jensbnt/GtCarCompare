@@ -73,8 +73,8 @@ public class Garage {
 		int totalValue = 0;
 		for(CarClass carClass : classes) {
 			for (Car car : carClass.getCars()) {
-				if (car.getOwned()) {
-					totalValue += car.getPrice();
+				if (car.getOwned() > 0) {
+					totalValue += car.getOwned() * car.getPrice();
 				}
 			}
 		}
@@ -135,9 +135,8 @@ public class Garage {
 		for(CarClass carClass : classes) {
 			if (carClass.isLoaded()) {
 				for (Car car : carClass.getCars()) {
-					if (car.getOwned() != ownedDb.contains(car)) {
-						car.toggleOwned();
-					} 
+					int owned = ownedDb.contains(car);
+					car.setOwned(owned);
 				}
 			}
 		}

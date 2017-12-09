@@ -60,9 +60,7 @@ public class OfflineDatabase implements CarDatabase {
 		int weight = Integer.parseInt(splittedLine[8]);
 		int price = Integer.parseInt(splittedLine[9]);
 		
-		Boolean owned = false;
-		
-		return new Car(id, make, name, maxSpeed, acceleration, braking, cornering, stability, bhp, weight, price, owned);
+		return new Car(id, make, name, maxSpeed, acceleration, braking, cornering, stability, bhp, weight, price, 0);
 	}
 
 }
