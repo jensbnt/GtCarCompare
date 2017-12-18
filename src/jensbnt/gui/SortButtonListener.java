@@ -19,14 +19,12 @@ public class SortButtonListener implements ActionListener {
 	private List<StatRadioButton> sortingRadioButtons;
 	private List<ClassCheckBox> classCheckBoxes;
 	private JCheckBox checkOwned;
-	private JCheckBox checkFocus;
 	
-	public SortButtonListener(CarTableModel carTableModel, List<StatRadioButton> sortingRadioButtons, List<ClassCheckBox> classCheckBoxes, JCheckBox checkOwned, JCheckBox checkFocus) {
+	public SortButtonListener(CarTableModel carTableModel, List<StatRadioButton> sortingRadioButtons, List<ClassCheckBox> classCheckBoxes, JCheckBox checkOwned) {
 		this.carTableModel = carTableModel;
 		this.sortingRadioButtons = sortingRadioButtons;
 		this.classCheckBoxes = classCheckBoxes;
 		this.checkOwned = checkOwned;
-		this.checkFocus = checkFocus;
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -53,10 +51,6 @@ public class SortButtonListener implements ActionListener {
 		Car[] list = CarSort.getSortedCars(CarComparator.getComparatorByStat(selectedSortStat), checkOwned.isSelected(), selectedClasses);
 		
 		for (Car car : list) {
-			if (checkFocus.isSelected()) {
-				System.out.println("FOCUS IS DISABLED");
-			}
-			
 			carTableModel.addRow(car);
 		}
 	}

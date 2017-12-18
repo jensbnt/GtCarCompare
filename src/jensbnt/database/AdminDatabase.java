@@ -14,8 +14,8 @@ public class AdminDatabase extends OnlineDatabase {
 	
 	private static Boolean adminAccess;
 	
-	public AdminDatabase() {
-		super();
+	public AdminDatabase(String dbms, String serverName, String userName, String password, String dbName) {
+		super(dbName, dbName, dbName, dbName, dbName);
 		adminAccess = false;
 	}
 	
@@ -25,7 +25,7 @@ public class AdminDatabase extends OnlineDatabase {
 		return adminAccess;
 	}
 	
-	public static void getAcces(String user, String password) {
+	public void getAcces(String user, String password) {
 		adminAccess = EncryptMD5.cryptWithMD5(password).equals(getEncryptedPassword(user));
 		
 		if (adminAccess) {
@@ -35,11 +35,11 @@ public class AdminDatabase extends OnlineDatabase {
 		}
 	}
 	
-	public static void removeAcces() {
+	public void removeAcces() {
 		adminAccess = false;
 	}
 	
-	private static String getEncryptedPassword(String user) {
+	private String getEncryptedPassword(String user) {
 		PreparedStatement stmt = null;
 		String password = "";
 		try {

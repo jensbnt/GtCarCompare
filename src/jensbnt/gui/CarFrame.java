@@ -62,7 +62,6 @@ public class CarFrame extends JFrame {
 	
 	/* Option Items */
 	private JCheckBox checkOwned;
-	private JCheckBox checkFocus;
 	private JCheckBox selectAll;
 	
 	/* Car Option Items */
@@ -126,7 +125,6 @@ public class CarFrame extends JFrame {
 		
 		/* Initialize Option Items */
 		checkOwned = new JCheckBox("Only show owned cars");
-		checkFocus = new JCheckBox("Focus in filtered fields");
 		selectAll = new JCheckBox("Select all classes");
 		
 		/* Initialize Car Option Items */
@@ -196,7 +194,6 @@ public class CarFrame extends JFrame {
 		optionPanel.setBorder(BorderFactory.createTitledBorder("Options"));
 		optionPanel.setLayout(new GridLayout(BUTTON_ROW_HEIGHT, 0));
 		optionPanel.add(checkOwned);
-		optionPanel.add(checkFocus);
 		optionPanel.add(selectAll);
 		
 		/* Car Option */
@@ -268,7 +265,7 @@ public class CarFrame extends JFrame {
 					                         null, options, options[0]);
 					if(option == 0) { // pressing OK button
 					    char[] password = pass.getPassword();
-					    AdminDatabase.getAcces(user.getText(), new String(password));
+					    //AdminDatabase.getAcces(user.getText(), new String(password));
 					    
 					    if (AdminDatabase.hasAccess()) {
 					    	adminPanel.setVisible(true);
@@ -296,7 +293,7 @@ public class CarFrame extends JFrame {
 		});
 		
 		/* Initialize Action Listeners */
-		buttonSort.addActionListener(new SortButtonListener((CarTableModel) carTable.getModel(), sortingRadioButtons, classCheckBoxes, checkOwned, checkFocus));
+		buttonSort.addActionListener(new SortButtonListener((CarTableModel) carTable.getModel(), sortingRadioButtons, classCheckBoxes, checkOwned));
 
 		/* Initialize Car Option Listeners */
 		editOwn.addChangeListener(new ChangeListener() {
