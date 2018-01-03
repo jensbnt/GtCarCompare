@@ -17,18 +17,15 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -37,7 +34,6 @@ import javax.swing.event.ListSelectionListener;
 
 import jensbnt.compareApp.Car;
 import jensbnt.compareApp.Garage;
-import jensbnt.database.AdminDatabase;
 import jensbnt.util.CarClasses;
 import jensbnt.util.CarStats;
 
@@ -51,7 +47,6 @@ public class CarFrame extends JFrame {
 	private JMenuBar menuBar;
 	private JMenu menu1_tools;
 	private JMenuItem item1_1_value;
-	private JMenuItem item1_2_admin;
 	
 	/* Sorting Items */
 	private ButtonGroup sortingGroup;
@@ -75,14 +70,6 @@ public class CarFrame extends JFrame {
 	private JTable carTable;
 	private JScrollPane scrollPane;
 	
-	/* Admin menu */
-	private JPanel adminPanel;
-	private JButton adminAddCar;
-	private JButton adminEditCar;
-	private JButton adminOnlineOffline;
-	private JButton adminOfflineOnline;
-	private JButton adminDeactivate;
-	
 	public CarFrame() {
 		super("GT Sport");
 		initComponents();
@@ -99,8 +86,6 @@ public class CarFrame extends JFrame {
 		menuBar = new JMenuBar();
 		menu1_tools = new JMenu("Tools");
 		item1_1_value = new JMenuItem("Calculate garage value");
-		item1_2_admin = new JMenuItem("Admin menu");
-		item1_2_admin.setVisible(false);
 		
 		/* Initialize Sorting Items */
 		sortingRadioButtons = new ArrayList<>();
@@ -147,25 +132,16 @@ public class CarFrame extends JFrame {
 		carTable.setFillsViewportHeight(true);
 		carTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		/* Initialize Admin Items */
-		adminAddCar = new JButton("Add Car");
-		adminEditCar = new JButton("Edit Car");
-		adminEditCar.setEnabled(false);
-		adminOnlineOffline = new JButton("Move online to offline");
-		adminOfflineOnline = new JButton("Move offline to online");
-		adminDeactivate = new JButton("Deactivate admin");
-		
 		/* Initialize window */
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(750, 500);
-		setLocation(20, 20);
+        setLocationRelativeTo(null);
 	}
 	
 	private void initMenu() {
 		setJMenuBar(menuBar);
 		menuBar.add(menu1_tools);
 		menu1_tools.add(item1_1_value);
-		menu1_tools.add(item1_2_admin);
 	}
 	
 	private void layoutComponents() {
@@ -202,24 +178,12 @@ public class CarFrame extends JFrame {
 		carOptionPanel.setLayout(new GridLayout(BUTTON_ROW_HEIGHT, 0));
 		carOptionPanel.add(editOwn);
 		
-		/* Admin */
-		adminPanel = new JPanel();
-		adminPanel.setVisible(false);
-		adminPanel.setBorder(BorderFactory.createTitledBorder("Admin Options"));
-		adminPanel.setLayout(new GridLayout(BUTTON_ROW_HEIGHT, 0));
-		adminPanel.add(adminAddCar);
-		adminPanel.add(adminEditCar);
-		adminPanel.add(adminOnlineOffline);
-		adminPanel.add(adminOfflineOnline);
-		adminPanel.add(adminDeactivate);
-		
 		/* Parent */
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 		topPanel.add(sortPanel);
 		topPanel.add(classPanel);
 		topPanel.add(optionPanel);
 		topPanel.add(carOptionPanel);
-		topPanel.add(adminPanel);
 		
 		/* Layout Car Panel */
 		add(scrollPane, BorderLayout.CENTER);
@@ -240,38 +204,6 @@ public class CarFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JOptionPane.showMessageDialog(null, "Your garage is worth " +  NumberFormat.getIntegerInstance().format(Garage.getValue()) + " Credits.", "GT Sport - Garage Value", JOptionPane.PLAIN_MESSAGE);
-			}
-			
-		});
-		
-		item1_2_admin.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (!AdminDatabase.hasAccess()) {
-					JPanel panel = new JPanel();
-					panel.setLayout(new GridLayout(2,2));
-					JLabel lblUser = new JLabel("User: ");
-					JTextField user = new JTextField("jensbnt");
-					JLabel lblPassword = new JLabel("Password: ");
-					JPasswordField pass = new JPasswordField(10);
-					panel.add(lblUser);
-					panel.add(user);
-					panel.add(lblPassword);
-					panel.add(pass);
-					String[] options = new String[]{"OK", "Cancel"};
-					int option = JOptionPane.showOptionDialog(null, panel, "Log in",
-					                         JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
-					                         null, options, options[0]);
-					if(option == 0) { // pressing OK button
-					    char[] password = pass.getPassword();
-					    //AdminDatabase.getAcces(user.getText(), new String(password));
-					    
-					    if (AdminDatabase.hasAccess()) {
-					    	adminPanel.setVisible(true);
-					    }
-					}
-			    }
 			}
 			
 		});
@@ -309,55 +241,12 @@ public class CarFrame extends JFrame {
 
 		});
 		
-		/* Initialize Admin Listeners */
-		adminAddCar.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-			}
-			
-		});
-		
-		adminEditCar.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-			}
-			
-		});
-		
-		adminOnlineOffline.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-			}
-			
-		});
-		
-		adminOfflineOnline.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-			}
-			
-		});
-		adminDeactivate.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				/*adminPanel.setVisible(false);
-				AdminDatabase.removeAcces();*/
-			}
-			
-		});
-		
 		/* Initialize Car Panel Listeners */
 		carTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if(carTable.getSelectedRow() != -1) {
 					editOwn.setEnabled(true);
-					adminEditCar.setEnabled(true);
 					
 					CarTableModel model = (CarTableModel) carTable.getModel();
 					Car car = model.getCarAt(carTable.getSelectedRow());
@@ -365,7 +254,6 @@ public class CarFrame extends JFrame {
 					editOwn.setValue(car.getOwned());
 				} else {
 					editOwn.setEnabled(false);
-					adminEditCar.setEnabled(false);
 				}
 			}
 		});

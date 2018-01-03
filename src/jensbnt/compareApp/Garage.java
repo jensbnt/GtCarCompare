@@ -28,6 +28,9 @@ public class Garage {
 	private static final String password = "3b9RQuniYk";
 	private static final String dbName = "sql11207639";
 	
+	/* Load Offline */
+	private static final Boolean offlineLoad = true;
+	
 	Garage() {
 		/* Set up databases */
 		Logger.addLog("Setting up new databases");
@@ -102,6 +105,9 @@ public class Garage {
 			}
 			
 			try {	// TRY TO LOAD ONLINE
+				if(offlineLoad){
+					throw new CarLoadException("Force offline load");
+				}
 				classes.add(new CarClass(carClass, onlineLoad(carClass), true));
 			} catch (CarLoadException e) {
 				Logger.addErrorLog("Online load fail: " + e.getMessage());

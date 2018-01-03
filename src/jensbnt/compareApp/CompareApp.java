@@ -39,8 +39,8 @@ public class CompareApp {
 	private static void setupGUI() {
 		Logger.addLog("Loading GUI");
 		try {
-			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			//UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException e1) {
 			Logger.addErrorLog(e1.getMessage());
 		} catch (InstantiationException e1) {
